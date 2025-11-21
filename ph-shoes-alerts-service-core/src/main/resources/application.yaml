@@ -1,0 +1,3 @@
+schema:
+  migrations:
+    service-name: alerts_service

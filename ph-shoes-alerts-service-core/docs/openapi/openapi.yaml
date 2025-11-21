@@ -1,0 +1,228 @@
+openapi: 3.1.0
+info:
+  title: PH Shoes — Alerts API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+
+tags:
+  - name: Alerts
+    description: Manage user alerts for catalog items.
+
+paths:
+  /alerts:
+    post:
+      tags: [Alerts]
+      summary: Create an alert for a catalog item (one per user per item)
+      operationId: createAlert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertResponse'
+        '400':
+          description: Invalid request (missing trigger, bad price/percent)
+        '409':
+          description: Alert already exists for this user + product
+    get:
+      tags: [Alerts]
+      summary: List alerts for the authenticated user
+      operationId: listAlerts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertResponse'
+
+  /alerts/{productId}:
+    get:
+      tags: [Alerts]
+      summary: Get a single alert for the authenticated user by productId
+      operationId: getAlert
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertResponse'
+        '404':
+          description: Alert not found
+    put:
+      tags: [Alerts]
+      summary: Update trigger criteria and optionally re-enable a triggered alert
+      operationId: updateAlert
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertResponse'
+        '400':
+          description: Invalid request (missing trigger, bad price/percent)
+        '404':
+          description: Alert not found
+    delete:
+      tags: [Alerts]
+      summary: Delete an alert for the authenticated user
+      operationId: deleteAlert
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  schemas:
+    AlertStatus:
+      type: string
+      description: Current lifecycle of the alert.
+      enum: [ACTIVE, TRIGGERED, PAUSED]
+
+    AlertChannel:
+      type: string
+      enum: [APP_WIDGET, EMAIL]
+
+    AlertCreateRequest:
+      type: object
+      required: [productId, productName, productCurrentPrice]
+      properties:
+        productId:
+          type: string
+          description: Catalog product identifier.
+        productName:
+          type: string
+          description: Snapshot of the product name at the time of alert creation.
+        productOriginalPrice:
+          type: number
+          format: double
+          minimum: 0
+          description: Required when desiredPercent is provided.
+        productCurrentPrice:
+          type: number
+          format: double
+          minimum: 0
+          description: Snapshot of the current (today) price for comparison.
+        desiredPrice:
+          type: number
+          format: double
+          minimum: 0
+        desiredPercent:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+        alertIfSale:
+          type: boolean
+          default: false
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertChannel'
+          description: Defaults to APP_WIDGET when omitted or empty.
+      description: At least one trigger must be provided (desiredPrice, desiredPercent, or alertIfSale).
+
+    AlertUpdateRequest:
+      type: object
+      properties:
+        productName:
+          type: string
+        productOriginalPrice:
+          type: number
+          format: double
+          minimum: 0
+        productCurrentPrice:
+          type: number
+          format: double
+          minimum: 0
+        desiredPrice:
+          type: number
+          format: double
+          minimum: 0
+        desiredPercent:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+        alertIfSale:
+          type: boolean
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertChannel'
+          description: Defaults to APP_WIDGET when omitted or empty.
+        resetStatus:
+          type: boolean
+          description: When true, sets status back to ACTIVE and clears lastTriggeredAt.
+      description: At least one trigger must be provided (desiredPrice, desiredPercent, or alertIfSale).
+
+    AlertResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+        userId:
+          type: string
+        productName:
+          type: string
+        productOriginalPrice:
+          type: number
+          format: double
+        productCurrentPrice:
+          type: number
+          format: double
+        desiredPrice:
+          type: number
+          format: double
+        desiredPercent:
+          type: number
+          format: double
+        alertIfSale:
+          type: boolean
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertChannel'
+        status:
+          $ref: '#/components/schemas/AlertStatus'
+        lastTriggeredAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
