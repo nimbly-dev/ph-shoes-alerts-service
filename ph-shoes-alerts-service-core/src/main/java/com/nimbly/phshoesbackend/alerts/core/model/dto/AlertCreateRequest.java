@@ -1,0 +1,30 @@
+package com.nimbly.phshoesbackend.alerts.core.model.dto;
+
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record AlertCreateRequest(
+        @NotBlank String productId,
+        @NotBlank String userId,
+
+        @Positive(message = "desiredPrice must be > 0")
+        BigDecimal desiredPrice,
+
+        @DecimalMax(value = "100.0", message = "desiredPercent must be <= 100")
+        BigDecimal desiredPercent,
+
+        Boolean alertIfSale,
+        List<String> channels,
+
+        @NotBlank String productName,
+
+        @Positive(message = "productOriginalPrice must be > 0")
+        BigDecimal productOriginalPrice,
+
+        @Positive(message = "productCurrentPrice must be > 0")
+        BigDecimal productCurrentPrice
+) { }
