@@ -66,6 +66,30 @@ public class Alert {
     private String productName;
 
     @Getter(onMethod_ = {
+            @DynamoDbAttribute(AlertAttrs.PRODUCT_BRAND)
+    })
+    @Setter
+    private String productBrand;
+
+    @Getter(onMethod_ = {
+            @DynamoDbAttribute(AlertAttrs.PRODUCT_IMAGE)
+    })
+    @Setter
+    private String productImage;
+
+    @Getter(onMethod_ = {
+            @DynamoDbAttribute(AlertAttrs.PRODUCT_IMAGE_URL)
+    })
+    @Setter
+    private String productImageUrl;
+
+    @Getter(onMethod_ = {
+            @DynamoDbAttribute(AlertAttrs.PRODUCT_URL)
+    })
+    @Setter
+    private String productUrl;
+
+    @Getter(onMethod_ = {
             @DynamoDbAttribute(AlertAttrs.PRODUCT_ORIGINAL_PRICE)
     })
     @Setter

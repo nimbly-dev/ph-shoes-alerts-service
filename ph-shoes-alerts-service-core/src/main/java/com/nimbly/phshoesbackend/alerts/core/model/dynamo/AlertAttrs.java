@@ -14,6 +14,10 @@ public final class AlertAttrs {
     public static final String ALERT_IF_SALE = "alertIfSale";
     public static final String CHANNELS = "channels";
     public static final String PRODUCT_NAME = "productName";
+    public static final String PRODUCT_BRAND = "productBrand";
+    public static final String PRODUCT_IMAGE = "productImage";
+    public static final String PRODUCT_IMAGE_URL = "productImageUrl";
+    public static final String PRODUCT_URL = "productUrl";
     public static final String PRODUCT_ORIGINAL_PRICE = "productOriginalPrice";
     public static final String PRODUCT_CURRENT_PRICE = "productCurrentPrice";
     public static final String STATUS = "status";

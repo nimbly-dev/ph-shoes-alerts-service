@@ -52,9 +52,10 @@ public class DynamoDbAlertRepository implements AlertRepository {
         if (idx == null) return Collections.emptyList();
 
         var out = new ArrayList<Alert>();
+        int effectiveLimit = limit > 0 ? limit : Integer.MAX_VALUE;
         var req = QueryEnhancedRequest.builder()
                 .queryConditional(QueryConditional.keyEqualTo(Key.builder().partitionValue(userId).build()))
-                .limit(limit > 0 ? limit : 100)
+                .limit(effectiveLimit)
                 .build();
 
         var results = idx.query(req);
@@ -62,12 +63,36 @@ public class DynamoDbAlertRepository implements AlertRepository {
         for (var page : results) {
             for (Alert a : page.items()) {
                 out.add(a);
-                if (limit > 0 && out.size() >= limit) {
+                if (out.size() >= effectiveLimit) {
                     return out;
                 }
             }
         }
         return out;
+    }
+
+    @Override
+    public List<Alert> findByUserFiltered(String userId, String query, String brand, int limit) {
+        var base = findByUser(userId, limit > 0 ? limit : 0);
+        if ((query == null || query.isBlank()) && (brand == null || brand.isBlank())) return base;
+        String q = query == null ? "" : query.trim().toLowerCase();
+        String b = brand == null ? "" : brand.trim().toLowerCase();
+        var filtered = new ArrayList<Alert>();
+        for (Alert a : base) {
+            boolean matches = true;
+            if (!q.isBlank()) {
+                String name = a.getProductName() != null ? a.getProductName().toLowerCase() : "";
+                String br = a.getProductBrand() != null ? a.getProductBrand().toLowerCase() : "";
+                matches = name.contains(q) || br.contains(q);
+            }
+            if (matches && !b.isBlank()) {
+                String br = a.getProductBrand() != null ? a.getProductBrand().toLowerCase() : "";
+                matches = br.contains(b);
+            }
+            if (matches) filtered.add(a);
+            if (limit > 0 && filtered.size() >= limit) break;
+        }
+        return filtered;
     }
 
     @Override

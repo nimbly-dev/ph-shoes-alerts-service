@@ -19,7 +19,7 @@
     <name>ph-shoes-alerts-service</name>
 	<modules>
 		<module>ph-shoes-alerts-service-core</module>
-<!--		<module>ph-shoes-alerts-service-web</module>-->
+		<module>ph-shoes-alerts-service-web</module>
 <!--		<module>ph-shoes-alerts-service-scheduler</module>-->
 	</modules>
 
@@ -31,6 +31,7 @@
 		<springdoc.version>2.8.14</springdoc.version>
 		<java.jwt.version>4.5.0</java.jwt.version>
 		<jackson.nullable.version>0.2.8</jackson.nullable.version>
+        <user.accounts.service.api.version>0.0.1-SNAPSHOT</user.accounts.service.api.version>
 	</properties>
 
 	<dependencies>
@@ -96,6 +97,11 @@
 				<artifactId>ph-shoes-services-common-core</artifactId>
 				<version>${common.service.api.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>com.nimbly.phshoesbackend.useraccount</groupId>
+                <artifactId>ph-shoes-user-accounts-service-core</artifactId>
+                <version>${user.accounts.service.api.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 

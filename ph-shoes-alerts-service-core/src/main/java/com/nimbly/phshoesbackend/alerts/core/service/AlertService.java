@@ -17,4 +17,6 @@ public interface AlertService {
     Optional<Alert> getAlert(String productId, String userId);
 
     List<Alert> listAlerts(String userId, int limit);
+    List<Alert> searchAlerts(String userId, String query, String brand, int page, int size);
+    List<Alert> searchAllAlerts(String userId, String query, String brand);
 }

@@ -1,0 +1,62 @@
+openapi: 3.1.0
+components:
+  schemas:
+    AlertStatus:
+      type: string
+      enum: [ACTIVE, TRIGGERED, PAUSED]
+
+    AlertChannel:
+      type: string
+      enum: [APP_WIDGET, EMAIL]
+
+    AlertCreateRequest:
+      type: object
+      required: [productId, productName, productCurrentPrice]
+      properties:
+        productId: { type: string }
+        userId: { type: string, description: "Populated from auth token; clients may omit." }
+        desiredPrice: { type: number, format: double, minimum: 0 }
+        desiredPercent: { type: number, format: double, minimum: 0, maximum: 100 }
+        alertIfSale: { type: boolean, default: false }
+        channels:
+          type: array
+          items: { $ref: '#/components/schemas/AlertChannel' }
+        productName: { type: string }
+        productOriginalPrice: { type: number, format: double, minimum: 0 }
+        productCurrentPrice: { type: number, format: double, minimum: 0 }
+
+    AlertUpdateRequest:
+      type: object
+      properties:
+        productId: { type: string }
+        userId: { type: string, description: "Populated from auth token; clients may omit." }
+        desiredPrice: { type: number, format: double, minimum: 0 }
+        desiredPercent: { type: number, format: double, minimum: 0, maximum: 100 }
+        alertIfSale: { type: boolean }
+        channels:
+          type: array
+          items: { $ref: '#/components/schemas/AlertChannel' }
+        productName: { type: string }
+        productOriginalPrice: { type: number, format: double, minimum: 0 }
+        productCurrentPrice: { type: number, format: double, minimum: 0 }
+        resetStatus: { type: boolean }
+
+    AlertResponse:
+      type: object
+      properties:
+        productId: { type: string }
+        userId: { type: string }
+        productName: { type: string }
+        productOriginalPrice: { type: number, format: double }
+        productCurrentPrice: { type: number, format: double }
+        desiredPrice: { type: number, format: double }
+        desiredPercent: { type: number, format: double }
+        alertIfSale: { type: boolean }
+        channels:
+          type: array
+          items: { $ref: '#/components/schemas/AlertChannel' }
+        status:
+          $ref: '#/components/schemas/AlertStatus'
+        lastTriggeredAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }

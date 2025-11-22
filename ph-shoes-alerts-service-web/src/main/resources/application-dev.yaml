@@ -1,0 +1,45 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: ph-shoes-alerts-service-web
+
+cors:
+  allowed-origins:
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
+    - "https://ph-shoes-frontend.onrender.com"
+    - "https://www.phshoesproject.com"
+    - "https://phshoesproject.com"
+  allowed-methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+  allowed-headers: ["*"]
+  exposed-headers: []
+  allow-credentials: true
+  max-age: 3600
+
+jwt:
+  issuer: ph-shoes
+  secret: change-me-dev-only
+  accessTtlSeconds: 3600
+
+logging:
+  level:
+    root: INFO
+
+aws:
+  region: ap-southeast-1
+  endpoint: ${AWS_ENDPOINT:http://localhost:4566}
+
+security:
+  email:
+    hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
+    aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
+    legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
+
+schema:
+  migrations:
+    enabled: true
+    bootstrapIfMissing: true
+    initial: 0.0.0
+    serviceName: alerts_service

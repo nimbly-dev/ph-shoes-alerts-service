@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: PH Shoes — Alerts Admin/Web API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+
+paths:
+  /alerts:
+    post:
+      summary: Create an alert for the authenticated user
+      operationId: createAlert
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+    get:
+      summary: List alerts for the authenticated user
+      operationId: listAlerts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+
+  /alerts/{productId}:
+    get:
+      summary: Get an alert by productId for the authenticated user
+      operationId: getAlert
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+        '404':
+          description: Not Found
+    put:
+      summary: Update an alert (criteria or reset status)
+      operationId: updateAlert
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete an alert
+      operationId: deleteAlert
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
