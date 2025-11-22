@@ -37,6 +37,10 @@ public class AlertServiceImpl implements AlertService {
         alert.setAlertIfSale(Boolean.TRUE.equals(request.alertIfSale()));
         alert.setChannels(AlertValidationUtils.normalizeChannels(request.channels()));
         alert.setProductName(request.productName());
+        alert.setProductBrand(request.productBrand());
+        alert.setProductImage(request.productImage());
+        alert.setProductImageUrl(request.productImageUrl() != null ? request.productImageUrl() : request.productImage());
+        alert.setProductUrl(request.productUrl());
         alert.setProductOriginalPrice(request.productOriginalPrice());
         alert.setProductCurrentPrice(request.productCurrentPrice());
         alert.setStatus(AlertStatus.ACTIVE);
@@ -61,6 +65,10 @@ public class AlertServiceImpl implements AlertService {
         if (request.alertIfSale() != null) existing.setAlertIfSale(request.alertIfSale());
         if (request.channels() != null) existing.setChannels(AlertValidationUtils.normalizeChannels(request.channels()));
         if (request.productName() != null) existing.setProductName(request.productName());
+        if (request.productBrand() != null) existing.setProductBrand(request.productBrand());
+        if (request.productImage() != null) existing.setProductImage(request.productImage());
+        if (request.productImageUrl() != null) existing.setProductImageUrl(request.productImageUrl());
+        if (request.productUrl() != null) existing.setProductUrl(request.productUrl());
         if (request.productOriginalPrice() != null) existing.setProductOriginalPrice(request.productOriginalPrice());
         if (request.productCurrentPrice() != null) existing.setProductCurrentPrice(request.productCurrentPrice());
 
@@ -90,5 +98,21 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public List<Alert> listAlerts(String userId, int limit) {
         return repository.findByUser(userId, limit);
+    }
+
+    @Override
+    public List<Alert> searchAlerts(String userId, String query, String brand, int page, int size) {
+        int pageSize = size > 0 ? size : 10;
+        int fetchLimit = (page >= 0 ? page + 1 : 1) * pageSize;
+        var results = repository.findByUserFiltered(userId, query, brand, fetchLimit);
+        int from = Math.max(0, page) * pageSize;
+        int to = Math.min(results.size(), from + pageSize);
+        if (from >= results.size()) return List.of();
+        return results.subList(from, to);
+    }
+
+    @Override
+    public List<Alert> searchAllAlerts(String userId, String query, String brand) {
+        return repository.findByUserFiltered(userId, query, brand, 0);
     }
 }

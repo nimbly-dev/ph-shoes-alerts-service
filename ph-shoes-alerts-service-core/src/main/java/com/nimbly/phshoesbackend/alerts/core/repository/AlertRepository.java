@@ -11,6 +11,7 @@ public interface AlertRepository {
     Optional<Alert> findByProductAndUser(String productId, String userId);
 
     List<Alert> findByUser(String userId, int limit);
+    List<Alert> findByUserFiltered(String userId, String query, String brand, int limit);
 
     List<Alert> findActiveByProduct(String productId, int limit);
 

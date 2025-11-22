@@ -9,7 +9,7 @@ import java.util.List;
 
 public record AlertUpdateRequest(
         @NotBlank String productId,
-        @NotBlank String userId,
+        String userId,
 
         @Positive(message = "desiredPrice must be > 0")
         BigDecimal desiredPrice,
@@ -21,6 +21,10 @@ public record AlertUpdateRequest(
         List<String> channels,
 
         String productName,
+        String productBrand,
+        String productImage,
+        String productImageUrl,
+        String productUrl,
 
         @Positive(message = "productOriginalPrice must be > 0")
         BigDecimal productOriginalPrice,
