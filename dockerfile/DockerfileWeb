@@ -8,7 +8,6 @@ ARG MAVEN_ACTIVE_PROFILES=prod
 ENV MAVEN_SETTINGS_PATH=/tmp/maven-settings.xml
 ENV SPRING_PROFILES_ACTIVE=${MAVEN_ACTIVE_PROFILES}
 
-# Maven settings for private GitHub packages
 RUN printf '%s\n' \
     '<settings>' \
     '  <servers>' \
@@ -19,13 +18,11 @@ RUN printf '%s\n' \
     '</settings>' \
     > ${MAVEN_SETTINGS_PATH}
 
-# Cache deps
 COPY pom.xml .
 COPY ph-shoes-alerts-service-core/pom.xml ph-shoes-alerts-service-core/pom.xml
 COPY ph-shoes-alerts-service-web/pom.xml ph-shoes-alerts-service-web/pom.xml
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${MAVEN_ACTIVE_PROFILES} -DskipTests dependency:go-offline
 
-# Build web module
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY docs ./docs
