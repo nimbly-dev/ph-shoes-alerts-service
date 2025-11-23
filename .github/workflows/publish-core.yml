@@ -12,9 +12,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ph-shoes-services/ph-shoes-alerts-service
     env:
       GH_ACTOR: ${{ secrets.GH_ACTOR }}
       GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
@@ -28,6 +25,7 @@ jobs:
           java-version: 21
 
       - name: Configure Maven settings for GitHub Packages
+        working-directory: .
         run: |
           cat > ~/.m2/settings.xml <<'EOF'
           <settings>
