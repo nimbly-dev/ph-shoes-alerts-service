@@ -1,0 +1,55 @@
+name: Publish Alerts Core
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'ph-shoes-alerts-service-core/**'
+      - 'ph-shoes-alerts-service/pom.xml'
+      - '.github/workflows/publish-core.yml'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ph-shoes-services/ph-shoes-alerts-service
+    env:
+      GH_ACTOR: ${{ secrets.GH_ACTOR }}
+      GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Configure Maven settings for GitHub Packages
+        run: |
+          cat > ~/.m2/settings.xml <<'EOF'
+          <settings>
+            <servers>
+              <server>
+                <id>github-nimbly-notification</id>
+                <username>${env.GH_ACTOR}</username>
+                <password>${env.GH_PACKAGES_TOKEN}</password>
+              </server>
+              <server>
+                <id>github-nimbly-commons</id>
+                <username>${env.GH_ACTOR}</username>
+                <password>${env.GH_PACKAGES_TOKEN}</password>
+              </server>
+              <server>
+                <id>github-nimbly-useraccounts</id>
+                <username>${env.GH_ACTOR}</username>
+                <password>${env.GH_PACKAGES_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Build and publish core
+        run: mvn -pl ph-shoes-alerts-service-core -am clean deploy -DskipTests
