@@ -86,12 +86,7 @@ jobs:
           fi
           QUERY="date=${DATE_VAL}"
           if [ -n "${INPUT_EMAIL}" ]; then
-            ENCODED=$(python - <<'PY'
-import urllib.parse, os
-email=os.environ.get("INPUT_EMAIL","")
-print(urllib.parse.quote(email))
-PY
-)
+            ENCODED=$(python -c "import urllib.parse, os;print(urllib.parse.quote(os.environ.get('INPUT_EMAIL','')))") || exit 1
             QUERY="${QUERY}&email=${ENCODED}"
           fi
           URL="http://localhost:8085/api/v1/alerts-scheduler/run?${QUERY}"
