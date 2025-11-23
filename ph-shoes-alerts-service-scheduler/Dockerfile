@@ -20,10 +20,12 @@ RUN printf '%s\n' \
 
 COPY pom.xml .
 COPY ph-shoes-alerts-service-core/pom.xml ph-shoes-alerts-service-core/pom.xml
+COPY ph-shoes-alerts-service-web/pom.xml ph-shoes-alerts-service-web/pom.xml
 COPY ph-shoes-alerts-service-scheduler/pom.xml ph-shoes-alerts-service-scheduler/pom.xml
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${MAVEN_ACTIVE_PROFILES} -DskipTests dependency:go-offline
 
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
+COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
 COPY docs ./docs
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-scheduler -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
