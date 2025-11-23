@@ -1,12 +1,6 @@
 name: Publish Alerts Core
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - 'ph-shoes-alerts-service-core/**'
-      - 'ph-shoes-alerts-service/pom.xml'
-      - '.github/workflows/publish-core.yml'
   workflow_dispatch:
 
 jobs:
@@ -50,5 +44,5 @@ jobs:
           EOF
 
       - name: Build and publish core
-        working-directory: ph-shoes-services/ph-shoes-alerts-service
+        working-directory: .
         run: mvn -pl ph-shoes-alerts-service-core -am clean deploy
