@@ -52,4 +52,5 @@ jobs:
           EOF
 
       - name: Build and publish core
+        working-directory: ph-shoes-services/ph-shoes-alerts-service
         run: mvn -pl ph-shoes-alerts-service-core -am clean deploy -DskipTests
