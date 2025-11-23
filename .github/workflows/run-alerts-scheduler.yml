@@ -1,0 +1,106 @@
+name: Run Alerts Scheduler
+
+on:
+  schedule:
+    # 11:40 PM Manila (UTC+8) => 15:40 UTC
+    - cron: "40 15 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "ISO date to run (defaults to today UTC)"
+        required: false
+      email:
+        description: "Optional test email to limit alerts"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  run-scheduler:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ph-shoes-services/ph-shoes-alerts-service
+    env:
+      TZ: Asia/Manila
+      SPRING_PROFILES_ACTIVE: prod
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PWD: ${{ secrets.SNOWFLAKE_PWD }}
+      SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+      NOTIFICATION_UNSUBSCRIBE_LINK: ${{ secrets.NOTIFICATION_UNSUBSCRIBE_LINK }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build scheduler image
+        run: docker build -t ph-shoes-alerts-scheduler:latest -f ph-shoes-alerts-service-scheduler/Dockerfile .
+
+      - name: Start scheduler container
+        run: |
+          docker run -d --name alerts-scheduler \
+            -p 8085:8085 \
+            -e AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY \
+            -e AWS_REGION \
+            -e SNOWFLAKE_ACCOUNT \
+            -e SNOWFLAKE_USER \
+            -e SNOWFLAKE_PWD \
+            -e SNOWFLAKE_DATABASE \
+            -e SNOWFLAKE_WAREHOUSE \
+            -e SNOWFLAKE_SCHEMA \
+            -e SPRING_PROFILES_ACTIVE \
+            -e NOTIFICATION_UNSUBSCRIBE_LINK \
+            ph-shoes-alerts-scheduler:latest
+
+      - name: Wait for scheduler to start
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:8085/system/status >/dev/null; then
+              exit 0
+            fi
+            if ! docker ps --format '{{.Names}}' | grep -q '^alerts-scheduler$'; then
+              echo "Container exited early"
+              docker logs alerts-scheduler || true
+              exit 1
+            fi
+            sleep 3
+          done
+          echo "Scheduler did not start"
+          docker logs alerts-scheduler || true
+          exit 1
+
+      - name: Trigger scheduler run
+        env:
+          INPUT_DATE: ${{ github.event.inputs.date }}
+          INPUT_EMAIL: ${{ github.event.inputs.email }}
+        run: |
+          DATE_VAL="${INPUT_DATE}"
+          if [ -z "$DATE_VAL" ]; then
+            DATE_VAL="$(date -u +"%Y-%m-%d")"
+          fi
+          QUERY="date=${DATE_VAL}"
+          if [ -n "${INPUT_EMAIL}" ]; then
+            ENCODED=$(python - <<'PY'
+import urllib.parse, os
+email=os.environ.get("INPUT_EMAIL","")
+print(urllib.parse.quote(email))
+PY
+)
+            QUERY="${QUERY}&email=${ENCODED}"
+          fi
+          URL="http://localhost:8085/api/v1/alerts-scheduler/run?${QUERY}"
+          echo "Calling: $URL"
+          curl -fsS "$URL" -H "accept: */*"
+
+      - name: Stop container
+        if: always()
+        run: |
+          docker logs alerts-scheduler || true
+          docker stop alerts-scheduler || true
+          docker rm alerts-scheduler || true

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.nimbly.phshoesbackend.alerts</groupId>
@@ -10,11 +10,113 @@
     </parent>
 
     <artifactId>ph-shoes-alerts-service-scheduler</artifactId>
+    <name>ph-shoes-alerts-service-scheduler</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
+        <snowflake.jdbc.version>3.25.1</snowflake.jdbc.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.snowflake</groupId>
+            <artifactId>snowflake-jdbc</artifactId>
+            <version>${snowflake.jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.alerts</groupId>
+            <artifactId>ph-shoes-alerts-service-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.useraccount</groupId>
+            <artifactId>ph-shoes-user-accounts-service-core</artifactId>
+            <version>${user.accounts.service.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.notification</groupId>
+            <artifactId>ph-shoes-notification-service-core</artifactId>
+            <version>${notification.service.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.notification</groupId>
+            <artifactId>ph-shoes-notification-providers-email-smtp-mailhog</artifactId>
+            <version>${notification.service.api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.notification</groupId>
+            <artifactId>ph-shoes-notification-providers-email-ses</artifactId>
+            <version>${notification.service.api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
