@@ -14,6 +14,7 @@ RUN printf '%s\n' \
     '    <server><id>github-nimbly-notification</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '    <server><id>github-nimbly-commons</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '    <server><id>github-nimbly-useraccounts</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
+    '    <server><id>github-nimbly-alerts</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '  </servers>' \
     '</settings>' \
     > ${MAVEN_SETTINGS_PATH}

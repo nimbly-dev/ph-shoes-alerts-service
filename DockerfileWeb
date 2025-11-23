@@ -14,6 +14,7 @@ RUN printf '%s\n' \
     '    <server><id>github-nimbly-notification</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '    <server><id>github-nimbly-commons</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '    <server><id>github-nimbly-useraccounts</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
+    '    <server><id>github-nimbly-alerts</id><username>'"${GH_ACTOR}"'</username><password>'"${GH_PACKAGES_TOKEN}"'</password></server>' \
     '  </servers>' \
     '</settings>' \
     > ${MAVEN_SETTINGS_PATH}
@@ -27,14 +28,14 @@ RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
-RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-scheduler -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-web -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
 
 ## ---------- Runtime stage ----------
 FROM amazoncorretto:21-alpine AS runtime
 ENV APP_HOME=/app \
     JAVA_TOOL_OPTIONS="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -XX:MaxRAMPercentage=75" \
     SPRING_PROFILES_ACTIVE=prod \
-    PORT=8085
+    PORT=8084
 
 RUN addgroup -S spring && adduser -S spring -G spring
 RUN apk add --no-cache curl
@@ -42,7 +43,7 @@ RUN apk add --no-cache curl
 USER spring:spring
 WORKDIR ${APP_HOME}
 
-COPY --from=build /workspace/ph-shoes-alerts-service-scheduler/target/*.jar app.jar
+COPY --from=build /workspace/ph-shoes-alerts-service-web/target/*.jar app.jar
 
 EXPOSE ${PORT}
 ENTRYPOINT ["java","-jar","/app/app.jar"]
