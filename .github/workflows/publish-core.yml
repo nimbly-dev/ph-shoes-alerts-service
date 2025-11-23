@@ -26,18 +26,23 @@ jobs:
             <servers>
               <server>
                 <id>github-nimbly-notification</id>
-                <username>${env.GH_ACTOR}</username>
-                <password>${env.GH_PACKAGES_TOKEN}</password>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_PACKAGES_TOKEN}</password>
               </server>
               <server>
                 <id>github-nimbly-commons</id>
-                <username>${env.GH_ACTOR}</username>
-                <password>${env.GH_PACKAGES_TOKEN}</password>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_PACKAGES_TOKEN}</password>
               </server>
               <server>
                 <id>github-nimbly-useraccounts</id>
-                <username>${env.GH_ACTOR}</username>
-                <password>${env.GH_PACKAGES_TOKEN}</password>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_PACKAGES_TOKEN}</password>
+              </server>
+              <server>
+                <id>github-nimbly-alerts</id>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_PACKAGES_TOKEN}</password>
               </server>
             </servers>
           </settings>
@@ -45,4 +50,4 @@ jobs:
 
       - name: Build and publish core
         working-directory: .
-        run: mvn -pl ph-shoes-alerts-service-core -am clean deploy -DaltDeploymentRepository=github-nimbly-alerts::default::https://maven.pkg.github.com/nimbly-dev/ph-shoes-alerts-service
+        run: mvn -pl ph-shoes-alerts-service-core -am clean deploy -DaltDeploymentRepository=github-nimbly-alerts::https://maven.pkg.github.com/nimbly-dev/ph-shoes-alerts-service
