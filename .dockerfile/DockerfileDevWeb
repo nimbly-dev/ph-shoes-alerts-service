@@ -20,7 +20,6 @@ COPY ph-shoes-alerts-service-scheduler/pom.xml ph-shoes-alerts-service-scheduler
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
-COPY docs ./docs
 
 EXPOSE 8084
 CMD ["bash","-lc","cd ph-shoes-alerts-service-web && mvn -am -U -DskipTests spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='${JAVA_TOOL_OPTIONS}'"]

@@ -27,7 +27,6 @@ RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
-COPY docs ./docs
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-scheduler -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
 
 ## ---------- Runtime stage ----------
