@@ -20,7 +20,7 @@
 	<modules>
 		<module>ph-shoes-alerts-service-core</module>
 		<module>ph-shoes-alerts-service-web</module>
-<!--		<module>ph-shoes-alerts-service-scheduler</module>-->
+		<module>ph-shoes-alerts-service-scheduler</module>
 	</modules>
 
 	<properties>

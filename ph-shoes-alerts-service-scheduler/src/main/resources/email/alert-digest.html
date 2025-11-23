@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PH Shoes Alerts</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; padding:0; background:#f6f6f6; }
+    .container { max-width: 620px; margin: 24px auto; background:#ffffff; border-radius: 8px; overflow:hidden; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+    .hdr { background: linear-gradient(135deg, #111827, #1f2937); color:#fff; padding:16px 20px; font-size:18px; font-weight:600; }
+    .content { padding:20px; color:#111827; }
+    .item { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #e5e7eb; }
+    .item:last-child { border-bottom:none; }
+    .item img { width:90px; height:90px; object-fit:cover; border-radius:8px; background:#f0f0f0; }
+    .title { font-size:16px; font-weight:700; margin-bottom:6px; }
+    .meta { color:#6b7280; font-size:13px; margin-bottom:4px; }
+    .price { font-weight:700; font-size:15px; }
+    .price small { color:#9ca3af; text-decoration: line-through; margin-left:6px; font-weight:400; }
+    .reason { font-size:13px; color:#374151; margin-top:4px; }
+    .cta a { display:inline-block; margin-top:8px; padding:10px 14px; background:#2563eb; color:#fff !important; text-decoration:none; border-radius:6px; font-weight:600; }
+    .foot { font-size:12px; color:#6b7280; padding:0 20px 20px; }
+    a { color:#2563eb; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hdr">PH Shoes price alert</div>
+  <div class="content">
+    {{items}}
+  </div>
+  <div class="foot">
+    You are receiving this because you set an alert on PH Shoes. If you no longer want alerts, you can manage them in the app.
+  </div>
+</div>
+</body>
+</html>
