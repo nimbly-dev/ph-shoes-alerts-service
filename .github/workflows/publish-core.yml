@@ -45,4 +45,4 @@ jobs:
 
       - name: Build and publish core
         working-directory: .
-        run: mvn -pl ph-shoes-alerts-service-core -am clean deploy
+        run: mvn -pl ph-shoes-alerts-service-core -am clean deploy -DaltDeploymentRepository=github-nimbly-alerts::default::https://maven.pkg.github.com/nimbly-dev/ph-shoes-alerts-service
