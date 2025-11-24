@@ -36,7 +36,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build scheduler image
-        run: docker build -t ph-shoes-alerts-scheduler:latest -f DockerfileScheduler .
+        env:
+          GH_ACTOR: ${{ secrets.GH_ACTOR }}
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: docker build -t ph-shoes-alerts-scheduler:latest --build-arg GH_ACTOR --build-arg GH_PACKAGES_TOKEN -f DockerfileScheduler .
 
       - name: Start scheduler container
         run: |
