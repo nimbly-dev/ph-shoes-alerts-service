@@ -19,9 +19,6 @@ permissions:
 jobs:
   run-scheduler:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ph-shoes-services/ph-shoes-alerts-service
     env:
       TZ: Asia/Manila
       SPRING_PROFILES_ACTIVE: prod
