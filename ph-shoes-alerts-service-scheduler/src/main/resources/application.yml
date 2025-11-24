@@ -3,12 +3,6 @@ spring:
     name: ph-shoes-alerts-service-scheduler
   main:
     web-application-type: servlet
-springdoc:
-  swagger-ui:
-    path: /api/v1/swagger-ui.html
-  api-docs:
-    path: /api/v1/api-docs
-
   datasource:
     url: >-
       jdbc:snowflake://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com
@@ -22,12 +16,17 @@ springdoc:
     hikari:
       data-source-properties:
         ENABLE_ARROW_RESULTSET: false
-
   jackson:
     serialization:
       write-dates-as-timestamps: false
     deserialization:
       adjust-dates-to-context-time-zone: false
+
+springdoc:
+  swagger-ui:
+    path: /api/v1/swagger-ui.html
+  api-docs:
+    path: /api/v1/api-docs
 
 logging:
   level:
