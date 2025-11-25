@@ -49,11 +49,11 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY \
             -e AWS_REGION \
             -e SNOWFLAKE_ACCOUNT \
-            -e SNOWFLAKE_USER \
-            -e SNOWFLAKE_PWD \
             -e SNOWFLAKE_DATABASE \
             -e SNOWFLAKE_WAREHOUSE \
             -e SNOWFLAKE_SCHEMA \
+            -e SPRING_DATASOURCE_USERNAME \
+            -e SPRING_DATASOURCE_PASSWORD \
             -e SPRING_PROFILES_ACTIVE \
             -e NOTIFICATION_UNSUBSCRIBE_LINK \
             ph-shoes-alerts-scheduler:latest

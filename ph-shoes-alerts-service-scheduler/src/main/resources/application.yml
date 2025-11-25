@@ -4,7 +4,7 @@ spring:
   main:
     web-application-type: servlet
   datasource:
-    url: "jdbc:snowflake://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/?warehouse=${SNOWFLAKE_WAREHOUSE}&db=${SNOWFLAKE_DATABASE}&schema=${SNOWFLAKE_SCHEMA:PRODUCTION_MARTS}&JDBC_QUERY_RESULT_FORMAT=JSON"
+    url: ${SPRING_DATASOURCE_URL:jdbc:snowflake://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/?warehouse=${SNOWFLAKE_WAREHOUSE}&db=${SNOWFLAKE_DATABASE}&schema=${SNOWFLAKE_SCHEMA:PRODUCTION_MARTS}&role=${SNOWFLAKE_ROLE:}&JDBC_QUERY_RESULT_FORMAT=JSON}
     username: ${SNOWFLAKE_USER:${SPRING_DATASOURCE_USERNAME}}
     password: ${SNOWFLAKE_PWD:${SPRING_DATASOURCE_PASSWORD}}
     driver-class-name: net.snowflake.client.jdbc.SnowflakeDriver

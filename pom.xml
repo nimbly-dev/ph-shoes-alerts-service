@@ -128,6 +128,15 @@
 		</plugins>
 	</build>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- Maven profile placeholder for local dev runs -->
+            </properties>
+        </profile>
+    </profiles>
+
 	<repositories>
 		<repository>
 			<id>github-nimbly-notification</id>
