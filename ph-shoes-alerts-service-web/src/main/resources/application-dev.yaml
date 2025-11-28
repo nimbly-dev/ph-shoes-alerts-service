@@ -1,9 +1,11 @@
 server:
   port: 8084
+  servlet:
+    context-path: /api/v1
 
 spring:
   application:
-    name: ph-shoes-alerts-service-web
+    name: alerts-web
 
 cors:
   allowed-origins:
@@ -26,6 +28,21 @@ jwt:
 logging:
   level:
     root: INFO
+
+phshoes:
+  status:
+    enabled: true
+    path: /system/status
+    service-id: alerts-web
+    display-name: Alerts
+    environment: ${SERVICE_ENVIRONMENT:local}
+    version: ${APP_VERSION:${PROJECT_VERSION:0.0.1-SNAPSHOT}}
+    openapi:
+      enabled: true
+      group-name: service-status
+      paths-to-match:
+        - /system/status
+      remove-security: true
 
 aws:
   region: ap-southeast-1

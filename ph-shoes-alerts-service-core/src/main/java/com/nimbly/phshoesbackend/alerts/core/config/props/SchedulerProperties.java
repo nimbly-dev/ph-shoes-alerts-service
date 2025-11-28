@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.config;
+package com.nimbly.phshoesbackend.alerts.core.config.props;
 
 import jakarta.validation.constraints.Min;
 import lombok.Getter;

@@ -20,7 +20,7 @@
 	<modules>
 		<module>ph-shoes-alerts-service-core</module>
 		<module>ph-shoes-alerts-service-web</module>
-		<module>ph-shoes-alerts-service-scheduler</module>
+        <module>ph-shoes-alerts-service-scheduler-web</module>
 	</modules>
 
 	<properties>
@@ -32,6 +32,7 @@
 		<java.jwt.version>4.5.0</java.jwt.version>
 		<jackson.nullable.version>0.2.8</jackson.nullable.version>
         <user.accounts.service.api.version>0.0.1-SNAPSHOT</user.accounts.service.api.version>
+        <snowflake.jdbc.version>3.25.1</snowflake.jdbc.version>
 	</properties>
 
 	<dependencies>
@@ -107,6 +108,14 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- Prevent boot:run from trying to execute on the aggregator (packaging=pom) -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

@@ -1,6 +1,6 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.repository;
+package com.nimbly.phshoesbackend.alerts.core.scheduler.repository;
 
-import com.nimbly.phshoesbackend.alerts.scheduler.model.ScrapedProduct;
+import com.nimbly.phshoesbackend.alerts.core.scheduler.model.ScrapedProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,6 +1,7 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.service;
+package com.nimbly.phshoesbackend.alerts.scheduler.web;
 
-import com.nimbly.phshoesbackend.alerts.scheduler.config.SchedulerProperties;
+import com.nimbly.phshoesbackend.alerts.core.config.props.SchedulerProperties;
+import com.nimbly.phshoesbackend.alerts.core.scheduler.service.AlertsSchedulerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

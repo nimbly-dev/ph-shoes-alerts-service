@@ -1,7 +1,7 @@
 package com.nimbly.phshoesbackend.alerts.scheduler.web;
 
-import com.nimbly.phshoesbackend.alerts.scheduler.service.AlertsSchedulerService;
-import com.nimbly.phshoesbackend.alerts.scheduler.service.AlertsSchedulerService.SchedulerRunSummary;
+import com.nimbly.phshoesbackend.alerts.core.scheduler.service.AlertsSchedulerService;
+import com.nimbly.phshoesbackend.alerts.core.scheduler.service.AlertsSchedulerService.SchedulerRunSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

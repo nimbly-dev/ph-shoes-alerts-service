@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AlertService {
-    Alert createAlert(AlertCreateRequest request);
+    Alert createAlert(String userId, AlertCreateRequest request);
 
-    Alert updateAlert(AlertUpdateRequest request);
+    Alert updateAlert(String productId, String userId, AlertUpdateRequest request);
 
     void deleteAlert(String productId, String userId);
 

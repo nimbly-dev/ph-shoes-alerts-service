@@ -22,13 +22,13 @@ RUN printf '%s\n' \
 COPY pom.xml .
 COPY ph-shoes-alerts-service-core/pom.xml ph-shoes-alerts-service-core/pom.xml
 COPY ph-shoes-alerts-service-web/pom.xml ph-shoes-alerts-service-web/pom.xml
-COPY ph-shoes-alerts-service-scheduler/pom.xml ph-shoes-alerts-service-scheduler/pom.xml
+COPY ph-shoes-alerts-service-scheduler-web/pom.xml ph-shoes-alerts-service-scheduler-web/pom.xml
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${MAVEN_ACTIVE_PROFILES} dependency:go-offline
 
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
-COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
-RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-scheduler -am -P${MAVEN_ACTIVE_PROFILES} package
+COPY ph-shoes-alerts-service-scheduler-web ./ph-shoes-alerts-service-scheduler-web
+RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-scheduler-web -am -P${MAVEN_ACTIVE_PROFILES} package
 
 ## ---------- Runtime stage ----------
 FROM amazoncorretto:21-alpine AS runtime
@@ -43,7 +43,7 @@ RUN apk add --no-cache curl
 USER spring:spring
 WORKDIR ${APP_HOME}
 
-COPY --from=build /workspace/ph-shoes-alerts-service-scheduler/target/*.jar app.jar
+COPY --from=build /workspace/ph-shoes-alerts-service-scheduler-web/target/*.jar app.jar
 
 EXPOSE ${PORT}
 ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/app.jar"]

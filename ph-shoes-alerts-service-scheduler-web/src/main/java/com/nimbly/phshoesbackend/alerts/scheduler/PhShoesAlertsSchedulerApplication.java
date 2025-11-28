@@ -1,6 +1,6 @@
 package com.nimbly.phshoesbackend.alerts.scheduler;
 
-import com.nimbly.phshoesbackend.alerts.scheduler.config.SchedulerProperties;
+import com.nimbly.phshoesbackend.alerts.core.config.props.SchedulerProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,7 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(SchedulerProperties.class)
 @ComponentScan(basePackages = {
         "com.nimbly.phshoesbackend.alerts.core",
-        "com.nimbly.phshoesbackend.alerts.scheduler",
+        "com.nimbly.phshoesbackend.alerts.scheduler.web",
+        "com.nimbly.phshoesbackend.alerts.scheduler.web.config",
         "com.nimbly.phshoesbackend.services.common.core",
         "com.nimbly.phshoesbackend.notification.core"
 })

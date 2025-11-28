@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ph-shoes-alerts-service-scheduler
+    name: ph-shoes-alerts-service-scheduler-web
   main:
     web-application-type: servlet
   datasource:
@@ -64,6 +64,7 @@ schema:
 
 alerts:
   scheduler:
+    enabled: true
     cron: "0 30 23 * * *"
     zone: "Asia/Manila"
     run-on-startup: true

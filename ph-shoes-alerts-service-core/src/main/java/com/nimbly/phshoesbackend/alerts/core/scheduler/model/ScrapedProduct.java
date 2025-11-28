@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.model;
+package com.nimbly.phshoesbackend.alerts.core.scheduler.model;
 
 import lombok.Builder;
 import lombok.Value;

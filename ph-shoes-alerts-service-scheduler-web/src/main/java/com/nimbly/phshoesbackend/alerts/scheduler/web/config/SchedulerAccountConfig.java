@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.config;
+package com.nimbly.phshoesbackend.alerts.scheduler.web.config;
 
 import com.nimbly.phshoesbackend.services.common.core.repository.SuppressionRepository;
 import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;

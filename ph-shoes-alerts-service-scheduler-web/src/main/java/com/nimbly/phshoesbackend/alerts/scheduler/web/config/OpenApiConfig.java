@@ -1,4 +1,4 @@
-package com.nimbly.phshoesbackend.alerts.scheduler.config;
+package com.nimbly.phshoesbackend.alerts.scheduler.web.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

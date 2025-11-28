@@ -9,15 +9,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ph-shoes-alerts-service-scheduler</artifactId>
-    <name>ph-shoes-alerts-service-scheduler</name>
+    <artifactId>ph-shoes-alerts-service-scheduler-web</artifactId>
+    <name>ph-shoes-alerts-service-scheduler-web</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
-        <snowflake.jdbc.version>3.25.1</snowflake.jdbc.version>
     </properties>
 
     <dependencies>
@@ -47,17 +46,6 @@
         </dependency>
 
         <dependency>
-            <groupId>net.snowflake</groupId>
-            <artifactId>snowflake-jdbc</artifactId>
-            <version>${snowflake.jdbc.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nimbly.phshoesbackend.alerts</groupId>
-            <artifactId>ph-shoes-alerts-service-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.nimbly.phshoesbackend.useraccount</groupId>
             <artifactId>ph-shoes-user-accounts-service-core</artifactId>
             <version>${user.accounts.service.api.version}</version>
@@ -80,6 +68,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.alerts</groupId>
+            <artifactId>ph-shoes-alerts-service-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

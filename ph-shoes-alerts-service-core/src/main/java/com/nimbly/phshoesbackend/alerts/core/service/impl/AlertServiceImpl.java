@@ -1,18 +1,20 @@
 package com.nimbly.phshoesbackend.alerts.core.service.impl;
 
+import com.nimbly.phshoesbackend.alerts.core.exception.AlertNotFoundException;
+import com.nimbly.phshoesbackend.alerts.core.exception.DuplicateAlertException;
 import com.nimbly.phshoesbackend.alerts.core.model.Alert;
 import com.nimbly.phshoesbackend.alerts.core.model.AlertStatus;
 import com.nimbly.phshoesbackend.alerts.core.repository.AlertRepository;
 import com.nimbly.phshoesbackend.alerts.core.service.AlertService;
-import com.nimbly.phshoesbackend.alerts.core.exception.AlertNotFoundException;
-import com.nimbly.phshoesbackend.alerts.core.exception.DuplicateAlertException;
+import com.nimbly.phshoesbackend.alerts.core.util.AlertValidationUtils;
+import com.nimbly.phshoesbackend.alerts.core.model.AlertChannel;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertCreateRequest;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertUpdateRequest;
-import com.nimbly.phshoesbackend.alerts.core.util.AlertValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -24,25 +26,26 @@ public class AlertServiceImpl implements AlertService {
     private final AlertRepository repository;
 
     @Override
-    public Alert createAlert(AlertCreateRequest request) {
-        AlertValidationUtils.validateTriggers(request.desiredPrice(), request.desiredPercent(), request.alertIfSale());
-        AlertValidationUtils.validatePricingSnapshot(request.desiredPercent(), request.productOriginalPrice(), request.productCurrentPrice());
+    public Alert createAlert(String userId, AlertCreateRequest request) {
+        BigDecimal desiredPrice = toBigDecimal(request.getDesiredPrice());
+        BigDecimal desiredPercent = toBigDecimal(request.getDesiredPercent());
+        BigDecimal originalPrice = toBigDecimal(request.getProductOriginalPrice());
+        BigDecimal currentPrice = toBigDecimal(request.getProductCurrentPrice());
 
-        var now = Instant.now();
-        var alert = new Alert();
-        alert.setProductId(request.productId());
-        alert.setUserId(request.userId());
-        alert.setDesiredPrice(request.desiredPrice());
-        alert.setDesiredPercent(request.desiredPercent());
-        alert.setAlertIfSale(Boolean.TRUE.equals(request.alertIfSale()));
-        alert.setChannels(AlertValidationUtils.normalizeChannels(request.channels()));
-        alert.setProductName(request.productName());
-        alert.setProductBrand(request.productBrand());
-        alert.setProductImage(request.productImage());
-        alert.setProductImageUrl(request.productImageUrl() != null ? request.productImageUrl() : request.productImage());
-        alert.setProductUrl(request.productUrl());
-        alert.setProductOriginalPrice(request.productOriginalPrice());
-        alert.setProductCurrentPrice(request.productCurrentPrice());
+        AlertValidationUtils.validateTriggers(desiredPrice, desiredPercent, request.getAlertIfSale());
+        AlertValidationUtils.validatePricingSnapshot(desiredPercent, originalPrice, currentPrice);
+
+        Instant now = Instant.now();
+        Alert alert = new Alert();
+        alert.setProductId(request.getProductId());
+        alert.setUserId(userId);
+        alert.setDesiredPrice(desiredPrice);
+        alert.setDesiredPercent(desiredPercent);
+        alert.setAlertIfSale(Boolean.TRUE.equals(request.getAlertIfSale()));
+        alert.setChannels(AlertValidationUtils.normalizeChannels(toChannelStrings(request.getChannels())));
+        alert.setProductName(request.getProductName());
+        alert.setProductOriginalPrice(originalPrice);
+        alert.setProductCurrentPrice(currentPrice);
         alert.setStatus(AlertStatus.ACTIVE);
         alert.setCreatedAt(now);
         alert.setUpdatedAt(now);
@@ -56,26 +59,36 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public Alert updateAlert(AlertUpdateRequest request) {
-        var existing = repository.findByProductAndUser(request.productId(), request.userId())
+    public Alert updateAlert(String productId, String userId, AlertUpdateRequest request) {
+        Alert existing = repository.findByProductAndUser(productId, userId)
                 .orElseThrow(() -> new AlertNotFoundException("Alert not found"));
 
-        if (request.desiredPrice() != null) existing.setDesiredPrice(request.desiredPrice());
-        if (request.desiredPercent() != null) existing.setDesiredPercent(request.desiredPercent());
-        if (request.alertIfSale() != null) existing.setAlertIfSale(request.alertIfSale());
-        if (request.channels() != null) existing.setChannels(AlertValidationUtils.normalizeChannels(request.channels()));
-        if (request.productName() != null) existing.setProductName(request.productName());
-        if (request.productBrand() != null) existing.setProductBrand(request.productBrand());
-        if (request.productImage() != null) existing.setProductImage(request.productImage());
-        if (request.productImageUrl() != null) existing.setProductImageUrl(request.productImageUrl());
-        if (request.productUrl() != null) existing.setProductUrl(request.productUrl());
-        if (request.productOriginalPrice() != null) existing.setProductOriginalPrice(request.productOriginalPrice());
-        if (request.productCurrentPrice() != null) existing.setProductCurrentPrice(request.productCurrentPrice());
+        if (request.getDesiredPrice() != null) {
+            existing.setDesiredPrice(toBigDecimal(request.getDesiredPrice()));
+        }
+        if (request.getDesiredPercent() != null) {
+            existing.setDesiredPercent(toBigDecimal(request.getDesiredPercent()));
+        }
+        if (request.getAlertIfSale() != null) {
+            existing.setAlertIfSale(request.getAlertIfSale());
+        }
+        if (request.getChannels() != null) {
+            existing.setChannels(AlertValidationUtils.normalizeChannels(toChannelStrings(request.getChannels())));
+        }
+        if (request.getProductName() != null) {
+            existing.setProductName(request.getProductName());
+        }
+        if (request.getProductOriginalPrice() != null) {
+            existing.setProductOriginalPrice(toBigDecimal(request.getProductOriginalPrice()));
+        }
+        if (request.getProductCurrentPrice() != null) {
+            existing.setProductCurrentPrice(toBigDecimal(request.getProductCurrentPrice()));
+        }
 
         AlertValidationUtils.validateTriggers(existing.getDesiredPrice(), existing.getDesiredPercent(), existing.getAlertIfSale());
         AlertValidationUtils.validatePricingSnapshot(existing.getDesiredPercent(), existing.getProductOriginalPrice(), existing.getProductCurrentPrice());
 
-        if (request.resetStatus()) {
+        if (Boolean.TRUE.equals(request.getResetStatus())) {
             existing.setStatus(AlertStatus.ACTIVE);
             existing.setLastTriggeredAt(null);
         }
@@ -107,12 +120,28 @@ public class AlertServiceImpl implements AlertService {
         var results = repository.findByUserFiltered(userId, query, brand, fetchLimit);
         int from = Math.max(0, page) * pageSize;
         int to = Math.min(results.size(), from + pageSize);
-        if (from >= results.size()) return List.of();
+        if (from >= results.size()) {
+            return List.of();
+        }
         return results.subList(from, to);
     }
 
     @Override
     public List<Alert> searchAllAlerts(String userId, String query, String brand) {
         return repository.findByUserFiltered(userId, query, brand, 0);
+    }
+
+    private static BigDecimal toBigDecimal(Double value) {
+        return value == null ? null : BigDecimal.valueOf(value);
+    }
+
+    private static List<String> toChannelStrings(List<AlertChannel> channels) {
+        if (channels == null) {
+            return null;
+        }
+        return channels.stream()
+                .filter(channel -> channel != null && channel.getValue() != null)
+                .map(AlertChannel::getValue)
+                .toList();
     }
 }

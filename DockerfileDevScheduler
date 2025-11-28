@@ -15,10 +15,10 @@ RUN mkdir -p /root/.m2 && printf '%s\n' \
 COPY pom.xml .
 COPY ph-shoes-alerts-service-core/pom.xml ph-shoes-alerts-service-core/pom.xml
 COPY ph-shoes-alerts-service-web/pom.xml ph-shoes-alerts-service-web/pom.xml
-COPY ph-shoes-alerts-service-scheduler/pom.xml ph-shoes-alerts-service-scheduler/pom.xml
+COPY ph-shoes-alerts-service-scheduler-web/pom.xml ph-shoes-alerts-service-scheduler-web/pom.xml
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
-COPY ph-shoes-alerts-service-scheduler ./ph-shoes-alerts-service-scheduler
+COPY ph-shoes-alerts-service-scheduler-web ./ph-shoes-alerts-service-scheduler-web
 
 EXPOSE 8085
-CMD ["mvn","-pl","ph-shoes-alerts-service-scheduler","-am","-U","-Pdev","spring-boot:run","-Dspring-boot.run.profiles=dev","-Dspring-boot.run.fork=false","-Dspring-boot.run.jvmArguments=${JAVA_TOOL_OPTIONS}"]
+CMD ["mvn","-pl","ph-shoes-alerts-service-scheduler-web","-am","-U","-Pdev","spring-boot:run","-Dspring-boot.run.profiles=dev","-Dspring-boot.run.fork=false","-Dspring-boot.run.jvmArguments=${JAVA_TOOL_OPTIONS}"]

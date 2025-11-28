@@ -35,6 +35,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -52,6 +56,20 @@
         <dependency>
             <groupId>com.nimbly.phshoesbackend.commons</groupId>
             <artifactId>ph-shoes-services-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.notification</groupId>
+            <artifactId>ph-shoes-notification-service-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbly.phshoesbackend.useraccount</groupId>
+            <artifactId>ph-shoes-user-accounts-service-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.snowflake</groupId>
+            <artifactId>snowflake-jdbc</artifactId>
+            <version>${snowflake.jdbc.version}</version>
         </dependency>
 
         <dependency>
@@ -117,7 +135,7 @@
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <apiPackage>com.nimbly.phshoesbackend.alerts.api</apiPackage>
-                            <modelPackage>com.nimbly.phshoesbackend.alerts.model</modelPackage>
+                            <modelPackage>com.nimbly.phshoesbackend.alerts.core.model.dto</modelPackage>
                             <configOptions>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <useJakartaEe>true</useJakartaEe>
@@ -126,7 +144,42 @@
                                 <useBeanValidation>true</useBeanValidation>
                                 <useAbstractClassForAllOf>false</useAbstractClassForAllOf>
                             </configOptions>
+                            <typeMappings>
+                            <typeMapping>AlertStatus=com.nimbly.phshoesbackend.alerts.core.model.AlertStatus</typeMapping>
+                            <typeMapping>AlertChannel=com.nimbly.phshoesbackend.alerts.core.model.AlertChannel</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>AlertStatus=com.nimbly.phshoesbackend.alerts.core.model.AlertStatus</importMapping>
+                                <importMapping>AlertChannel=com.nimbly.phshoesbackend.alerts.core.model.AlertChannel</importMapping>
+                            </importMappings>
                             <addCompileSourceRoot>true</addCompileSourceRoot>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sanitize-openapi-output</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- OpenAPI 7.16.0 is emitting a duplicate trailing brace on a couple files; trim it post-generation -->
+                                <replaceregexp byline="false"
+                                               file="${project.build.directory}/generated-sources/openapi/src/main/java/com/nimbly/phshoesbackend/alerts/api/AlertsApi.java"
+                                               match="}\\s*}\\s*$"
+                                               replace="}&#10;"/>
+                                <replaceregexp byline="false"
+                                               file="${project.build.directory}/generated-sources/openapi/src/main/java/com/nimbly/phshoesbackend/alerts/core/model/dto/AlertUpdateRequest.java"
+                                               match="}\\s*}\\s*$"
+                                               replace="}&#10;"/>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
