@@ -80,5 +80,8 @@ verification:
   verification-link: ${VERIFICATION_LINK:http://localhost:8082/verify}
   unsubscribe-link: ${VERIFICATION_UNSUBSCRIBE_LINK:${NOTIFICATION_UNSUBSCRIBE_LINK:http://localhost:8082/api/v1/user-accounts/unsubscribe}}
 
-jwt:
-  secret: ${JWT_SECRET:change-me-for-dev}
+phshoes:
+  security:
+    jwt:
+      enabled: false
+      secret: ${JWT_SECRET:change-me-for-dev}

@@ -7,19 +7,19 @@ import com.nimbly.phshoesbackend.useraccount.core.repository.dynamo.DynamoDbAcco
 import com.nimbly.phshoesbackend.useraccount.core.service.SuppressionService;
 import com.nimbly.phshoesbackend.useraccount.core.service.impl.SuppressionServiceImpl;
 import com.nimbly.phshoesbackend.useraccount.core.config.props.AppVerificationProps;
-import com.nimbly.phshoesbackend.useraccount.core.config.props.AppAuthProps;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.UnsubscribeService;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.UnsubscribeTokenCodec;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.HmacUnsubscribeTokenCodec;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.UnsubscribeServiceImpl;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmailProps;
+import com.nimbly.phshoesbackend.services.common.core.security.jwt.JwtSecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @Configuration
-@EnableConfigurationProperties({AppVerificationProps.class, AppAuthProps.class})
+@EnableConfigurationProperties({AppVerificationProps.class})
 public class SchedulerAccountConfig {
 
     @Bean
@@ -35,9 +35,9 @@ public class SchedulerAccountConfig {
 
     @Bean
     public UnsubscribeTokenCodec unsubscribeTokenCodec(AppVerificationProps verificationProps,
-                                                       AppAuthProps authProps,
+                                                       JwtSecurityProperties jwtSecurityProperties,
                                                        EmailCrypto emailCrypto) {
-        return new HmacUnsubscribeTokenCodec(verificationProps, authProps, emailCrypto);
+        return new HmacUnsubscribeTokenCodec(verificationProps, jwtSecurityProperties, emailCrypto);
     }
 
     @Bean

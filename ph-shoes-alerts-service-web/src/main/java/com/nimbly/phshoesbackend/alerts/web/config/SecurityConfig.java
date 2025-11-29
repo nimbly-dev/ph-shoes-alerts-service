@@ -1,7 +1,7 @@
 package com.nimbly.phshoesbackend.alerts.web.config;
 
-import com.nimbly.phshoesbackend.alerts.web.auth.JwtAuthFilter;
 import com.nimbly.phshoesbackend.alerts.web.config.props.CorsProps;
+import com.nimbly.phshoesbackend.services.common.core.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,11 +25,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final CorsProps corsProps;
-    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CorsProps corsProps, JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(CorsProps corsProps, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.corsProps = corsProps;
-        this.jwtAuthFilter = jwtAuthFilter;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -49,7 +49,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 

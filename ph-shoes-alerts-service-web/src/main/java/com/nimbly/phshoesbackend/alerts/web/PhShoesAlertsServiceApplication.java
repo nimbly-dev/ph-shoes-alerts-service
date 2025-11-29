@@ -1,12 +1,9 @@
 package com.nimbly.phshoesbackend.alerts.web;
 
-import com.nimbly.phshoesbackend.useraccount.core.auth.JwtTokenProvider;
-import com.nimbly.phshoesbackend.useraccount.core.config.props.AppAuthProps;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @ComponentScan(
@@ -19,7 +16,6 @@ import org.springframework.context.annotation.Import;
                 type = FilterType.REGEX,
                 pattern = "com\\.nimbly\\.phshoesbackend\\.alerts\\.core\\.scheduler\\..*")
 )
-@Import({JwtTokenProvider.class, AppAuthProps.class})
 public class PhShoesAlertsServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(PhShoesAlertsServiceApplication.class, args);

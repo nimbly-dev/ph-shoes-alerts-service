@@ -18,16 +18,17 @@ cors:
   allow-credentials: true
   max-age: 3600
 
-jwt:
-  issuer: ph-shoes
-  secret: ${JWT_SECRET:change-me-for-dev}
-  access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:1800}
-
 logging:
   level:
     root: INFO
 
 phshoes:
+  security:
+    jwt:
+      enabled: true
+      issuer: ph-shoes
+      secret: ${JWT_SECRET:change-me-for-dev}
+      access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:1800}
   status:
     enabled: true
     path: /system/status
