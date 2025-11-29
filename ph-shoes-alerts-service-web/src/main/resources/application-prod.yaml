@@ -41,6 +41,19 @@ phshoes:
       paths-to-match:
         - /system/status
       remove-security: true
+  api:
+    rate-limit:
+      enabled: true
+      default-window: 10m
+      global:
+        enabled: true
+        limit: 10000
+      per-ip:
+        enabled: true
+        limit: 150
+      per-user:
+        enabled: true
+        limit: 150
 
 security:
   email:

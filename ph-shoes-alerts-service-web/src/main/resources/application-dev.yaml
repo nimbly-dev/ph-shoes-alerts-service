@@ -43,6 +43,9 @@ phshoes:
       paths-to-match:
         - /system/status
       remove-security: true
+  api:
+    rate-limit:
+      enabled: false
 
 aws:
   region: ap-southeast-1
