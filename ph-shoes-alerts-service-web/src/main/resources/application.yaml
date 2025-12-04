@@ -27,6 +27,9 @@ cors:
   max-age: 3600
 
 phshoes:
+  dynamo:
+    migrations:
+      enabled: true
   security:
     jwt:
       enabled: true

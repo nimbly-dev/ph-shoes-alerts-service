@@ -53,9 +53,10 @@
             <artifactId>apache-client</artifactId>
         </dependency>
 
+        <!-- Shared service starter core (Dynamo migrations, security, etc.) -->
         <dependency>
-            <groupId>com.nimbly.phshoesbackend.commons</groupId>
-            <artifactId>ph-shoes-services-common-core</artifactId>
+            <groupId>com.nimbly.phshoesbackend.starters</groupId>
+            <artifactId>ph-shoes-starter-services-common-core</artifactId>
         </dependency>
 
         <dependency>

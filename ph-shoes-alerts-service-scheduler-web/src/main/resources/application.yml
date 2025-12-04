@@ -34,12 +34,6 @@ aws:
   region: ${AWS_REGION:ap-southeast-1}
   endpoint: ${AWS_ENDPOINT:}
 
-security:
-  email:
-    hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
-    aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
-    legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
-
 notification:
   provider: ${NOTIFICATION_PROVIDER:smtp}
   transport: ${NOTIFICATION_TRANSPORT:${NOTIFICATION_PROVIDER:smtp}}
@@ -81,7 +75,16 @@ verification:
   unsubscribe-link: ${VERIFICATION_UNSUBSCRIBE_LINK:${NOTIFICATION_UNSUBSCRIBE_LINK:http://localhost:8082/api/v1/user-accounts/unsubscribe}}
 
 phshoes:
+  dynamo:
+    migrations:
+      enabled: true
   security:
+    email:
+      hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
+      aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
+      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
     jwt:
       enabled: false
       secret: ${JWT_SECRET:change-me-for-dev}
+  suppression:
+    table-name: ${SUPPRESSIONS_TABLE:email_suppressions}

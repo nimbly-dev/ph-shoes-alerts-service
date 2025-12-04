@@ -33,7 +33,7 @@ public class AlertsSchedulerService {
     private final SchedulerProperties props;
     private final AlertTriggerEvaluator alertTriggerEvaluator;
     private final AlertDigestService alertDigestService;
-    private final com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto emailCrypto;
+    private final com.nimbly.phshoesbackend.commons.core.security.EmailCrypto emailCrypto;
 
     public SchedulerRunSummary run(LocalDate date) {
         return run(date, normalize(props.getTestEmail()));

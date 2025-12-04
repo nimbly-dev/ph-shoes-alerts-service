@@ -1,9 +1,9 @@
 package com.nimbly.phshoesbackend.alerts.core.migrations.steps;
 
 import com.nimbly.phshoesbackend.alerts.core.model.dynamo.AlertAttrs;
-import com.nimbly.phshoesbackend.services.common.core.migrations.UpgradeContext;
-import com.nimbly.phshoesbackend.services.common.core.migrations.UpgradeStep;
-import com.nimbly.phshoesbackend.services.common.core.migrations.utility.TableCreator;
+import com.nimbly.phshoesbackend.commons.core.migrations.UpgradeContext;
+import com.nimbly.phshoesbackend.commons.core.migrations.UpgradeStep;
+import com.nimbly.phshoesbackend.commons.core.migrations.utility.TableCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
