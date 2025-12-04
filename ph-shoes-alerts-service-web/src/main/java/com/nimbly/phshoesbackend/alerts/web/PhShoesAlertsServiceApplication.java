@@ -10,7 +10,7 @@ import org.springframework.context.annotation.FilterType;
         basePackages = {
                 "com.nimbly.phshoesbackend.alerts.core",
                 "com.nimbly.phshoesbackend.alerts.web",
-                "com.nimbly.phshoesbackend.services.common.core"
+                "com.nimbly.phshoesbackend.commons.core"
         },
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.REGEX,

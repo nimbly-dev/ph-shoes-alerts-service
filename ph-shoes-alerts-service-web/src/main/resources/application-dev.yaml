@@ -25,12 +25,21 @@ logging:
     root: INFO
 
 phshoes:
+  dynamo:
+    migrations:
+      enabled: true
   security:
+    email:
+      hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
+      aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
+      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
     jwt:
       enabled: true
       issuer: ph-shoes
       secret: change-me-dev-only
       access-ttl-seconds: 3600
+  suppression:
+    table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
   status:
     enabled: true
     path: /system/status
@@ -51,12 +60,6 @@ phshoes:
 aws:
   region: ap-southeast-1
   endpoint: ${AWS_ENDPOINT:http://localhost:4566}
-
-security:
-  email:
-    hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
-    aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
-    legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
 
 schema:
   migrations:

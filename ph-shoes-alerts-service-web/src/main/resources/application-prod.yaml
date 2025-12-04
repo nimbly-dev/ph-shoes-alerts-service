@@ -23,12 +23,21 @@ logging:
     root: INFO
 
 phshoes:
+  dynamo:
+    migrations:
+      enabled: true
   security:
+    email:
+      hmac-pepper-b64: ${HMAC_PEPPER_B64:?Missing HMAC_PEPPER_B64}
+      aes-key-b64: ${AES_KEY_B64:?Missing AES_KEY_B64}
+      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
     jwt:
       enabled: true
       issuer: ph-shoes
       secret: ${JWT_SECRET:change-me-for-dev}
       access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:1800}
+  suppression:
+    table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
   status:
     enabled: true
     path: /system/status
@@ -55,12 +64,6 @@ phshoes:
       per-user:
         enabled: true
         limit: 150
-
-security:
-  email:
-    hmac-pepper-b64: ${HMAC_PEPPER_B64:?Missing HMAC_PEPPER_B64}
-    aes-key-b64: ${AES_KEY_B64:?Missing AES_KEY_B64}
-    legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
 
 schema:
   migrations:

@@ -1,7 +1,7 @@
 package com.nimbly.phshoesbackend.alerts.scheduler.web.config;
 
-import com.nimbly.phshoesbackend.services.common.core.repository.SuppressionRepository;
-import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;
+import com.nimbly.phshoesbackend.commons.core.repository.SuppressionRepository;
+import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
 import com.nimbly.phshoesbackend.useraccount.core.repository.AccountRepository;
 import com.nimbly.phshoesbackend.useraccount.core.repository.dynamo.DynamoDbAccountRepository;
 import com.nimbly.phshoesbackend.useraccount.core.service.SuppressionService;
@@ -12,14 +12,14 @@ import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.UnsubscribeTokenCo
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.HmacUnsubscribeTokenCodec;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.UnsubscribeServiceImpl;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmailProps;
-import com.nimbly.phshoesbackend.services.common.core.security.jwt.JwtSecurityProperties;
+import com.nimbly.phshoesbackend.commons.core.security.jwt.JwtSecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @Configuration
-@EnableConfigurationProperties({AppVerificationProps.class})
+@EnableConfigurationProperties({AppVerificationProps.class, JwtSecurityProperties.class})
 public class SchedulerAccountConfig {
 
     @Bean

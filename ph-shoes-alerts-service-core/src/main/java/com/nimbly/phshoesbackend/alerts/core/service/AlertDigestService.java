@@ -6,7 +6,7 @@ import com.nimbly.phshoesbackend.alerts.core.util.TemplateRenderer;
 import com.nimbly.phshoesbackend.notification.core.model.dto.EmailAddress;
 import com.nimbly.phshoesbackend.notification.core.model.dto.EmailRequest;
 import com.nimbly.phshoesbackend.notification.core.service.NotificationService;
-import com.nimbly.phshoesbackend.services.common.core.security.EmailCrypto;
+import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
 import com.nimbly.phshoesbackend.useraccount.core.model.Account;
 import com.nimbly.phshoesbackend.useraccount.core.repository.AccountRepository;
 import com.nimbly.phshoesbackend.useraccount.core.service.SuppressionService;
