@@ -6,12 +6,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-@ComponentScan(
-        basePackages = {
-                "com.nimbly.phshoesbackend.alerts.core",
-                "com.nimbly.phshoesbackend.alerts.web",
-                "com.nimbly.phshoesbackend.commons.core"
-        },
+	@ComponentScan(
+	        basePackages = {
+	                "com.nimbly.phshoesbackend.alerts.core",
+	                "com.nimbly.phshoesbackend.alerts.web",
+	                "com.nimbly.phshoesbackend.commons.core",
+	                "com.nimbly.phshoesbackend.commons.web"
+	        },
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.REGEX,
                 pattern = "com\\.nimbly\\.phshoesbackend\\.alerts\\.core\\.scheduler\\..*")
