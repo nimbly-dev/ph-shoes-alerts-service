@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,10 @@ public class AlertController implements AlertsApi {
         resp.setProductId(alert.getProductId());
         resp.setUserId(alert.getUserId());
         resp.setProductName(alert.getProductName());
+        resp.setProductBrand(alert.getProductBrand());
+        resp.setProductImage(alert.getProductImage());
+        resp.setProductImageUrl(toUri(alert.getProductImageUrl()));
+        resp.setProductUrl(toUri(alert.getProductUrl()));
         if (alert.getProductOriginalPrice() != null) {
             resp.setProductOriginalPrice(alert.getProductOriginalPrice().doubleValue());
         }
@@ -129,6 +134,17 @@ public class AlertController implements AlertsApi {
             resp.setUpdatedAt(alert.getUpdatedAt().atOffset(ZoneOffset.UTC));
         }
         return resp;
+    }
+
+    private URI toUri(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            return URI.create(value);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     private String currentUserId() {

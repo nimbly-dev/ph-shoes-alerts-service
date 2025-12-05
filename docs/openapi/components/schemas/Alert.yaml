@@ -15,6 +15,10 @@ components:
       properties:
         productId: { type: string }
         userId: { type: string, description: "Populated from auth token; clients may omit." }
+        productBrand: { type: string, description: "Brand snapshot captured when the alert is created." }
+        productImage: { type: string, description: "Inline/base64 snapshot of the product image if available." }
+        productImageUrl: { type: string, format: uri, description: "Canonical product image URL snapshot." }
+        productUrl: { type: string, format: uri, description: "Canonical product page URL snapshot." }
         desiredPrice: { type: number, format: double, minimum: 0 }
         desiredPercent: { type: number, format: double, minimum: 0, maximum: 100 }
         alertIfSale: { type: boolean, default: false }
@@ -30,6 +34,10 @@ components:
       properties:
         productId: { type: string }
         userId: { type: string, description: "Populated from auth token; clients may omit." }
+        productBrand: { type: string }
+        productImage: { type: string }
+        productImageUrl: { type: string, format: uri }
+        productUrl: { type: string, format: uri }
         desiredPrice: { type: number, format: double, minimum: 0 }
         desiredPercent: { type: number, format: double, minimum: 0, maximum: 100 }
         alertIfSale: { type: boolean }
@@ -47,6 +55,10 @@ components:
         productId: { type: string }
         userId: { type: string }
         productName: { type: string }
+        productBrand: { type: string }
+        productImage: { type: string }
+        productImageUrl: { type: string, format: uri }
+        productUrl: { type: string, format: uri }
         productOriginalPrice: { type: number, format: double }
         productCurrentPrice: { type: number, format: double }
         desiredPrice: { type: number, format: double }

@@ -122,6 +122,20 @@ components:
         productId:
           type: string
           description: Catalog product identifier.
+        productBrand:
+          type: string
+          description: Brand snapshot captured at alert creation.
+        productImage:
+          type: string
+          description: Inline/Base64 image snapshot captured at alert creation.
+        productImageUrl:
+          type: string
+          format: uri
+          description: Canonical product image URL snapshot.
+        productUrl:
+          type: string
+          format: uri
+          description: Canonical catalog/product URL snapshot.
         productName:
           type: string
           description: Snapshot of the product name at the time of alert creation.
@@ -159,6 +173,16 @@ components:
       properties:
         productName:
           type: string
+        productBrand:
+          type: string
+        productImage:
+          type: string
+        productImageUrl:
+          type: string
+          format: uri
+        productUrl:
+          type: string
+          format: uri
         productOriginalPrice:
           type: number
           format: double
@@ -197,6 +221,16 @@ components:
           type: string
         productName:
           type: string
+        productBrand:
+          type: string
+        productImage:
+          type: string
+        productImageUrl:
+          type: string
+          format: uri
+        productUrl:
+          type: string
+          format: uri
         productOriginalPrice:
           type: number
           format: double
