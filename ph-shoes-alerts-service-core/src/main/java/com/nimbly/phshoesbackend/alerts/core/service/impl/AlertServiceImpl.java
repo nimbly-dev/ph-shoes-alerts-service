@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedExce
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public class AlertServiceImpl implements AlertService {
         alert.setAlertIfSale(Boolean.TRUE.equals(request.getAlertIfSale()));
         alert.setChannels(AlertValidationUtils.normalizeChannels(toChannelStrings(request.getChannels())));
         alert.setProductName(request.getProductName());
+        alert.setProductBrand(request.getProductBrand());
+        alert.setProductImage(request.getProductImage());
+        alert.setProductImageUrl(uriToString(request.getProductImageUrl()));
+        alert.setProductUrl(uriToString(request.getProductUrl()));
         alert.setProductOriginalPrice(originalPrice);
         alert.setProductCurrentPrice(currentPrice);
         alert.setStatus(AlertStatus.ACTIVE);
@@ -77,6 +82,18 @@ public class AlertServiceImpl implements AlertService {
         }
         if (request.getProductName() != null) {
             existing.setProductName(request.getProductName());
+        }
+        if (request.getProductBrand() != null) {
+            existing.setProductBrand(request.getProductBrand());
+        }
+        if (request.getProductImage() != null) {
+            existing.setProductImage(request.getProductImage());
+        }
+        if (request.getProductImageUrl() != null) {
+            existing.setProductImageUrl(uriToString(request.getProductImageUrl()));
+        }
+        if (request.getProductUrl() != null) {
+            existing.setProductUrl(uriToString(request.getProductUrl()));
         }
         if (request.getProductOriginalPrice() != null) {
             existing.setProductOriginalPrice(toBigDecimal(request.getProductOriginalPrice()));
@@ -143,5 +160,9 @@ public class AlertServiceImpl implements AlertService {
                 .filter(channel -> channel != null && channel.getValue() != null)
                 .map(AlertChannel::getValue)
                 .toList();
+    }
+
+    private static String uriToString(URI uri) {
+        return uri == null ? null : uri.toString();
     }
 }
