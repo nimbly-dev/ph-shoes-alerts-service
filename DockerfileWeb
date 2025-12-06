@@ -29,6 +29,7 @@ COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler-web ./ph-shoes-alerts-service-scheduler-web
 RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-web -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
+RUN rm -f ${MAVEN_SETTINGS_PATH}
 
 ## ---------- Runtime stage ----------
 FROM amazoncorretto:21-alpine AS runtime
