@@ -1,0 +1,34 @@
+# Build artifacts
+**/target/
+build/
+out/
+
+# Tooling/IDE
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+# Local env & secrets
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.crt
+*.jks
+*.keystore
+*.p12
+
+# Logs & temp files
+*.log
+logs/
+
+# Docker/local dev helpers
+DockerfileDev*
+docker-compose*.yml
+localstack-init/
+
+# Misc
+README.md
