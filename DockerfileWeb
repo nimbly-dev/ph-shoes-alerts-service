@@ -36,7 +36,7 @@ FROM amazoncorretto:21-alpine AS runtime
 ENV APP_HOME=/app \
     JAVA_TOOL_OPTIONS="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -XX:MaxRAMPercentage=75" \
     SPRING_PROFILES_ACTIVE=prod \
-    PORT=8084
+    PORT=8085
 
 RUN addgroup -S spring && adduser -S spring -G spring
 RUN apk add --no-cache curl

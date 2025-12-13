@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8085
   servlet:
     context-path: /api/v1
 
@@ -17,7 +17,6 @@ cors:
   allowed-origins:
     - "http://localhost:5173"
     - "http://127.0.0.1:5173"
-    - "https://ph-shoes-frontend.onrender.com"
     - "https://www.phshoesproject.com"
     - "https://phshoesproject.com"
   allowed-methods: ["GET","POST","PUT","DELETE","OPTIONS"]
@@ -41,8 +40,8 @@ phshoes:
     path: /system/status
     service-id: alerts-web
     display-name: Alerts
-    environment: ${SERVICE_ENVIRONMENT:local}
-    version: ${APP_VERSION:${PROJECT_VERSION:0.0.1-SNAPSHOT}}
+    environment: ${APP_ENV:local}
+    version: ${APP_VERSION:local}
     openapi:
       enabled: true
       group-name: service-status

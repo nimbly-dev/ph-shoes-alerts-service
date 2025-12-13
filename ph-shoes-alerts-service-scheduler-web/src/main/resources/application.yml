@@ -88,3 +88,13 @@ phshoes:
       secret: ${JWT_SECRET:change-me-for-dev}
   suppression:
     table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
+  status:
+    enabled: true
+    path: /api/v1/system/status
+    service-id: alerts
+    display-name: Alerts Service
+    environment: ${APP_ENV:local}
+    version: ${APP_VERSION:local}
+    description: Handles price alert notifications and scheduling.
+    metadata:
+      tier: backend
