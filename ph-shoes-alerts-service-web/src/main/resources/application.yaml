@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8085
   servlet:
     context-path: /api/v1
 
@@ -40,8 +40,8 @@ phshoes:
     path: /system/status
     service-id: alerts-web
     display-name: Alerts
-    environment: ${SERVICE_ENVIRONMENT:local}
-    version: ${APP_VERSION:${PROJECT_VERSION:0.0.1-SNAPSHOT}}
+    environment: ${APP_ENV:local}
+    version: ${APP_VERSION:local}
     openapi:
       enabled: true
       group-name: service-status
