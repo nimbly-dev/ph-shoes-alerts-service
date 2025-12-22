@@ -1,4 +1,4 @@
-name: Build & Publish Web Scheduler
+name: Build & Publish Alerts Web Scheduler
 
 on:
   workflow_dispatch:
