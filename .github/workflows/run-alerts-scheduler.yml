@@ -32,31 +32,15 @@ jobs:
       NOTIFICATION_UNSUBSCRIBE_LINK: ${{ secrets.NOTIFICATION_UNSUBSCRIBE_LINK }}
       SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
-      ECR_PUBLIC_REGION: us-east-1
       ECR_SCHEDULER_REPOSITORY_URI: ${{ secrets.ECR_SCHEDULER_REPOSITORY_URI }}
+      SCHEDULER_IMAGE_URI: ${{ secrets.ECR_SCHEDULER_REPOSITORY_URI }}:latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Resolve latest scheduler image
-        id: image
-        run: |
-          set -euo pipefail
-          REPO_NAME="${ECR_SCHEDULER_REPOSITORY_URI##*/}"
-          TAG=$(aws ecr-public describe-images \
-            --region "$ECR_PUBLIC_REGION" \
-            --repository-name "$REPO_NAME" \
-            --query 'imageDetails[0].imageTags[0]' \
-            --output text)
-          if [ -z "$TAG" ] || [ "$TAG" = "None" ]; then
-            echo "::error ::No scheduler image tag found in ECR Public for $REPO_NAME"
-            exit 1
-          fi
-          echo "image_uri=${ECR_SCHEDULER_REPOSITORY_URI}:${TAG}" >> $GITHUB_OUTPUT
-
       - name: Pull scheduler image
         run: |
-          docker pull "${{ steps.image.outputs.image_uri }}"
+          docker pull "$SCHEDULER_IMAGE_URI"
 
       - name: Start scheduler container
         run: |
@@ -73,7 +57,7 @@ jobs:
             -e SPRING_DATASOURCE_PASSWORD \
             -e SPRING_PROFILES_ACTIVE \
             -e NOTIFICATION_UNSUBSCRIBE_LINK \
-            "${{ steps.image.outputs.image_uri }}"
+            "$SCHEDULER_IMAGE_URI"
 
       - name: Wait for scheduler to start
         run: |
