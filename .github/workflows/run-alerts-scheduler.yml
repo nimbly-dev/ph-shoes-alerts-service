@@ -62,7 +62,7 @@ jobs:
       - name: Wait for scheduler to start
         run: |
           for i in {1..30}; do
-            if curl -fsS http://localhost:8085/system/status >/dev/null; then
+            if curl -fsS http://localhost:8085/api/v1/system/status >/dev/null; then
               exit 0
             fi
             if ! docker ps --format '{{.Names}}' | grep -q '^alerts-scheduler$'; then
