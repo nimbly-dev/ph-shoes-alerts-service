@@ -40,6 +40,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Login to Amazon ECR Public
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | \
+            docker login --username AWS --password-stdin public.ecr.aws
+
       - name: Pull scheduler image
         run: |
           docker pull "$SCHEDULER_IMAGE_URI"
@@ -104,3 +109,4 @@ jobs:
           docker logs alerts-scheduler || true
           docker stop alerts-scheduler || true
           docker rm alerts-scheduler || true
+
