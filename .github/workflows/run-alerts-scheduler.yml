@@ -36,6 +36,8 @@ jobs:
       AES_KEY_B64: ${{ secrets.AES_KEY_B64 }}
       HMAC_PEPPER_B64: ${{ secrets.HMAC_PEPPER_B64 }}
       SCHEDULER_IMAGE_URI: ${{ secrets.ECR_SCHEDULER_REPOSITORY_URI }}:latest
+      NOTIFICATION_PROVIDER: ${{ secrets.NOTIFICATION_PROVIDER }}
+      NOTIFICATION_TRANSPORT: ${{ secrets.NOTIFICATION_TRANSPORT }}
 
     steps:
       - uses: actions/checkout@v4
