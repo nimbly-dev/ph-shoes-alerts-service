@@ -59,6 +59,8 @@ jobs:
             -e SPRING_DATASOURCE_PASSWORD \
             -e SPRING_PROFILES_ACTIVE \
             -e NOTIFICATION_UNSUBSCRIBE_LINK \
+            -e AES_KEY_B64 \
+            -e HMAC_PEPPER_B64 \
             "$SCHEDULER_IMAGE_URI"
 
       - name: Wait for scheduler to start
