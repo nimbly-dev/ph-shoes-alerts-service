@@ -61,6 +61,8 @@ jobs:
             -e NOTIFICATION_UNSUBSCRIBE_LINK \
             -e AES_KEY_B64 \
             -e HMAC_PEPPER_B64 \
+            -e NOTIFICATION_PROVIDER
+            -e NOTIFICATION_TRANSPORT
             "$SCHEDULER_IMAGE_URI"
 
       - name: Wait for scheduler to start
