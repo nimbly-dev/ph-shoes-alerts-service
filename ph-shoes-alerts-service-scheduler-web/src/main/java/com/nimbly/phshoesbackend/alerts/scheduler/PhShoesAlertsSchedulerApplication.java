@@ -15,8 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.nimbly.phshoesbackend.alerts.scheduler.web",
         "com.nimbly.phshoesbackend.alerts.scheduler.web.config",
         "com.nimbly.phshoesbackend.commons.core",
-        "com.nimbly.phshoesbackend.notification.core",
-        "com.nimbly.phshoesbackend.notification.email.providers"
+        "com.nimbly.phshoesbackend.notification.core"
 })
 public class PhShoesAlertsSchedulerApplication {
     public static void main(String[] args) {
