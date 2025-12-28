@@ -1,0 +1,27 @@
+openapi: 3.1.0
+components:
+  schemas:
+    AlertsSchedulerRunResponse:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        scrapedCount:
+          type: integer
+          minimum: 0
+        dedupedCount:
+          type: integer
+          minimum: 0
+        alertsChecked:
+          type: integer
+          minimum: 0
+        triggered:
+          type: integer
+          minimum: 0
+        suppressed:
+          type: integer
+          minimum: 0
+        errors:
+          type: integer
+          minimum: 0

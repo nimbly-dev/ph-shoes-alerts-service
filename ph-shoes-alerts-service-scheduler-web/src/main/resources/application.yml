@@ -35,14 +35,14 @@ aws:
   endpoint: ${AWS_ENDPOINT:}
 
 notification:
-  provider: ${NOTIFICATION_PROVIDER:smtp}
-  transport: ${NOTIFICATION_TRANSPORT:${NOTIFICATION_PROVIDER:smtp}}
+  provider: ${NOTIFICATION_PROVIDER}
+  transport: ${NOTIFICATION_TRANSPORT:${NOTIFICATION_PROVIDER}}
   email:
     from: ${NOTIFICATION_FROM:PH Shoes <alerts@phshoesproject.com>}
-    list-unsubscribe: ${NOTIFICATION_LIST_UNSUBSCRIBE:<mailto:unsubscribe@phshoesproject.com>, <https://www.phshoesproject.com/account/alerts>}
+    list-unsubscribe: ${NOTIFICATION_LIST_UNSUBSCRIBE:<mailto:unsubscribe@phshoesproject.com>}
     list-unsubscribe-post: ${NOTIFICATION_LIST_UNSUBSCRIBE_POST:List-Unsubscribe=One-Click}
     subject-prefix: "[PH Shoes]"
-    unsubscribe-link: ${NOTIFICATION_UNSUBSCRIBE_LINK:http://localhost:8082/api/v1/user-accounts/unsubscribe}
+    unsubscribe-link: ${NOTIFICATION_UNSUBSCRIBE_LINK}
   smtp:
     host: ${NOTIFICATION_SMTP_HOST:mailhog}
     port: ${NOTIFICATION_SMTP_PORT:1025}
@@ -58,21 +58,14 @@ schema:
 
 alerts:
   scheduler:
-    enabled: true
-    cron: "0 30 23 * * *"
-    zone: "Asia/Manila"
-    run-on-startup: true
-    dry-run: false
-    max-alerts-per-product: 1000
-    test-email: ${ALERTS_TEST_EMAIL:}
-    fallback-to-latest-when-empty: true
-    unsubscribe-mailto: ${ALERTS_UNSUBSCRIBE_MAILTO:mailto:unsubscribe@phshoesproject.com}
-    unsubscribe-url: ${ALERTS_UNSUBSCRIBE_URL:${NOTIFICATION_UNSUBSCRIBE_LINK:http://localhost:8082/api/v1/user-accounts/unsubscribe}}
+    cron: ${ALERTS_SCHEDULER_CRON}
+    zone: ${ALERTS_SCHEDULER_ZONE}
+    dry-run: ${ALERTS_SCHEDULER_DRY_RUN}
+    test-email: ${ALERTS_TEST_EMAIL}
 
 verification:
-  secret: ${VERIFICATION_SECRET:change-me-for-dev}
-  verification-link: ${VERIFICATION_LINK:http://localhost:8082/verify}
-  unsubscribe-link: ${VERIFICATION_UNSUBSCRIBE_LINK:${NOTIFICATION_UNSUBSCRIBE_LINK:http://localhost:8082/api/v1/user-accounts/unsubscribe}}
+  secret: ${VERIFICATION_SECRET}
+  verification-link: ${VERIFICATION_LINK}
 
 phshoes:
   dynamo:
@@ -80,12 +73,12 @@ phshoes:
       enabled: true
   security:
     email:
-      hmac-pepper-b64: ${HMAC_PEPPER_B64:FVl9pBApQ2LgzIvgi7P/zMcc6BKoopvS}
-      aes-key-b64: ${AES_KEY_B64:8c2So7nkW7FInwpQfQYsk6NHg+9FJPxGSd701VXjSnQ=}
-      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64:}
+      hmac-pepper-b64: ${HMAC_PEPPER_B64}
+      aes-key-b64: ${AES_KEY_B64}
+      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64}
     jwt:
       enabled: false
-      secret: ${JWT_SECRET:change-me-for-dev}
+      secret: ${JWT_SECRET}
   suppression:
     table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
   status:

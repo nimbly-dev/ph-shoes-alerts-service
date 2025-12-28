@@ -1,23 +1,16 @@
-package com.nimbly.phshoesbackend.alerts.core.service;
+package com.nimbly.phshoesbackend.alerts.core.util;
 
 import com.nimbly.phshoesbackend.alerts.core.model.Alert;
 import com.nimbly.phshoesbackend.alerts.core.model.AlertProductSnapshot;
 import com.nimbly.phshoesbackend.alerts.core.model.AlertStatus;
-import com.nimbly.phshoesbackend.alerts.core.repository.AlertRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.math.RoundingMode;
+import java.time.Instant;
 
-@Service
-@RequiredArgsConstructor
-public class AlertTriggerEvaluator {
+public final class AlertTriggerEvaluator {
 
-    private final AlertRepository alertRepository;
-
-    public TriggerDecision evaluate(Alert alert, AlertProductSnapshot snapshot) {
+    public static TriggerDecision evaluate(Alert alert, AlertProductSnapshot snapshot) {
         BigDecimal sale = firstNonNull(snapshot.getPriceSale(), snapshot.getPriceOriginal());
         BigDecimal original = firstNonNull(snapshot.getPriceOriginal(), sale);
         boolean onSale = sale != null && original != null && sale.compareTo(original) < 0;
@@ -42,7 +35,7 @@ public class AlertTriggerEvaluator {
         return TriggerDecision.NOT_TRIGGERED;
     }
 
-    public void markTriggered(Alert alert, AlertProductSnapshot snapshot, Instant triggeredAt) {
+    public static void applyTriggeredAlert(Alert alert, AlertProductSnapshot snapshot, Instant triggeredAt) {
         BigDecimal sale = firstNonNull(snapshot.getPriceSale(), snapshot.getPriceOriginal());
         BigDecimal original = firstNonNull(snapshot.getPriceOriginal(), sale);
 
@@ -70,11 +63,9 @@ public class AlertTriggerEvaluator {
         if (snapshot.getProductUrl() != null) {
             alert.setProductUrl(snapshot.getProductUrl());
         }
-
-        alertRepository.save(alert);
     }
 
-    private BigDecimal firstNonNull(BigDecimal a, BigDecimal b) {
+    private static BigDecimal firstNonNull(BigDecimal a, BigDecimal b) {
         return a != null ? a : b;
     }
 

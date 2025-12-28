@@ -7,7 +7,7 @@ on:
     paths:
       - 'ph-shoes-alerts-service-web/**'
       - 'ph-shoes-alerts-service-core/**'
-      - 'DockerfileWeb'
+      - '.docker/DockerfileWeb'
       - 'pom.xml'
 
 permissions:
@@ -40,7 +40,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -f DockerfileWeb \
+            -f .docker/DockerfileWeb \
             --build-arg GH_ACTOR=${{ secrets.GH_ACTOR }} \
             --build-arg GH_PACKAGES_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }} \
             --no-cache \

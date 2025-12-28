@@ -3,19 +3,28 @@ package com.nimbly.phshoesbackend.alerts.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import com.nimbly.phshoesbackend.alerts.core.repository.WarehouseScrapeRepository;
+import com.nimbly.phshoesbackend.alerts.core.service.impl.AlertDigestServiceImpl;
+import com.nimbly.phshoesbackend.alerts.core.service.impl.AlertsSchedulerServiceImpl;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-	@ComponentScan(
-	        basePackages = {
-	                "com.nimbly.phshoesbackend.alerts.core",
-	                "com.nimbly.phshoesbackend.alerts.web",
-	                "com.nimbly.phshoesbackend.commons.core",
-	                "com.nimbly.phshoesbackend.commons.web"
-	        },
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.REGEX,
-                pattern = "com\\.nimbly\\.phshoesbackend\\.alerts\\.core\\.scheduler\\..*")
+@ComponentScan(
+        basePackages = {
+                "com.nimbly.phshoesbackend.alerts.core",
+                "com.nimbly.phshoesbackend.alerts.web",
+                "com.nimbly.phshoesbackend.commons.core",
+                "com.nimbly.phshoesbackend.commons.web"
+        },
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        classes = {
+                                AlertsSchedulerServiceImpl.class,
+                                AlertDigestServiceImpl.class,
+                                WarehouseScrapeRepository.class
+                        })
+        }
 )
 public class PhShoesAlertsServiceApplication {
     public static void main(String[] args) {

@@ -5,8 +5,9 @@ WORKDIR /workspace
 ARG GH_ACTOR
 ARG GH_PACKAGES_TOKEN
 ARG MAVEN_ACTIVE_PROFILES=prod
+ARG SERVICE_MODULE=ph-shoes-alerts-service-scheduler-web
+
 ENV MAVEN_SETTINGS_PATH=/tmp/maven-settings.xml
-ENV SPRING_PROFILES_ACTIVE=${MAVEN_ACTIVE_PROFILES}
 
 RUN printf '%s\n' \
     '<settings>' \
@@ -28,15 +29,16 @@ RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -U -P${
 COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler-web ./ph-shoes-alerts-service-scheduler-web
-RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ph-shoes-alerts-service-web -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
+COPY docs ./docs
+RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ${SERVICE_MODULE} -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
 RUN rm -f ${MAVEN_SETTINGS_PATH}
 
 ## ---------- Runtime stage ----------
 FROM amazoncorretto:21-alpine AS runtime
 ENV APP_HOME=/app \
-    JAVA_TOOL_OPTIONS="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -XX:MaxRAMPercentage=75" \
-    SPRING_PROFILES_ACTIVE=prod \
-    PORT=8080
+    JAVA_TOOL_OPTIONS="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -XX:MaxRAMPercentage=75"
+
+ARG SERVICE_MODULE=ph-shoes-alerts-service-scheduler-web
 
 RUN addgroup -S spring && adduser -S spring -G spring
 RUN apk add --no-cache curl
@@ -44,7 +46,7 @@ RUN apk add --no-cache curl
 USER spring:spring
 WORKDIR ${APP_HOME}
 
-COPY --from=build /workspace/ph-shoes-alerts-service-web/target/*.jar app.jar
+COPY --from=build /workspace/${SERVICE_MODULE}/target/*.jar app.jar
 
-EXPOSE ${PORT}
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app/app.jar"]
+EXPOSE 8085
+ENTRYPOINT ["java","-jar","/app/app.jar"]
