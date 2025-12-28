@@ -3,7 +3,7 @@ package com.nimbly.phshoesbackend.alerts.web.controller;
 import com.nimbly.phshoesbackend.alerts.api.AlertsApi;
 import com.nimbly.phshoesbackend.alerts.core.exception.AlertNotFoundException;
 import com.nimbly.phshoesbackend.alerts.core.model.Alert;
-import com.nimbly.phshoesbackend.alerts.core.model.AlertChannel;
+import com.nimbly.phshoesbackend.alerts.core.model.AlertStatus;
 import com.nimbly.phshoesbackend.alerts.core.service.AlertService;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertCreateRequest;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertResponse;
@@ -114,15 +114,15 @@ public class AlertController implements AlertsApi {
         if (alert.getDesiredPercent() != null) {
             resp.setDesiredPercent(alert.getDesiredPercent().doubleValue());
         }
-        resp.setAlertIfSale(Boolean.TRUE.equals(alert.getAlertIfSale()));
+        resp.setAlertIfSale(Boolean.TRUE.equals(alert.getAlertIfSale()));       
         if (alert.getChannels() != null) {
             resp.setChannels(alert.getChannels().stream()
+                    .map(this::toResponseChannel)
                     .filter(Objects::nonNull)
-                    .map(AlertChannel::fromValue)
                     .collect(Collectors.toList()));
         }
         if (alert.getStatus() != null) {
-            resp.setStatus(alert.getStatus());
+            resp.setStatus(toResponseStatus(alert.getStatus()));
         }
         if (alert.getLastTriggeredAt() != null) {
             resp.setLastTriggeredAt(alert.getLastTriggeredAt().atOffset(ZoneOffset.UTC));
@@ -134,6 +134,28 @@ public class AlertController implements AlertsApi {
             resp.setUpdatedAt(alert.getUpdatedAt().atOffset(ZoneOffset.UTC));
         }
         return resp;
+    }
+
+    private AlertResponse.ChannelsEnum toResponseChannel(String channel) {
+        if (channel == null || channel.isBlank()) {
+            return null;
+        }
+        try {
+            return AlertResponse.ChannelsEnum.fromValue(channel);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    private AlertResponse.StatusEnum toResponseStatus(AlertStatus status) {
+        if (status == null) {
+            return null;
+        }
+        try {
+            return AlertResponse.StatusEnum.fromValue(status.name());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     private URI toUri(String value) {

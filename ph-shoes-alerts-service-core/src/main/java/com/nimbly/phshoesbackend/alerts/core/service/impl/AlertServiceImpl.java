@@ -7,7 +7,6 @@ import com.nimbly.phshoesbackend.alerts.core.model.AlertStatus;
 import com.nimbly.phshoesbackend.alerts.core.repository.AlertRepository;
 import com.nimbly.phshoesbackend.alerts.core.service.AlertService;
 import com.nimbly.phshoesbackend.alerts.core.util.AlertValidationUtils;
-import com.nimbly.phshoesbackend.alerts.core.model.AlertChannel;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertCreateRequest;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ public class AlertServiceImpl implements AlertService {
         alert.setDesiredPrice(desiredPrice);
         alert.setDesiredPercent(desiredPercent);
         alert.setAlertIfSale(Boolean.TRUE.equals(request.getAlertIfSale()));
-        alert.setChannels(AlertValidationUtils.normalizeChannels(toChannelStrings(request.getChannels())));
+        alert.setChannels(AlertValidationUtils.normalizeChannels(toCreateChannelStrings(request.getChannels())));
         alert.setProductName(request.getProductName());
         alert.setProductBrand(request.getProductBrand());
         alert.setProductImage(request.getProductImage());
@@ -78,7 +77,7 @@ public class AlertServiceImpl implements AlertService {
             existing.setAlertIfSale(request.getAlertIfSale());
         }
         if (request.getChannels() != null) {
-            existing.setChannels(AlertValidationUtils.normalizeChannels(toChannelStrings(request.getChannels())));
+            existing.setChannels(AlertValidationUtils.normalizeChannels(toUpdateChannelStrings(request.getChannels())));
         }
         if (request.getProductName() != null) {
             existing.setProductName(request.getProductName());
@@ -152,13 +151,21 @@ public class AlertServiceImpl implements AlertService {
         return value == null ? null : BigDecimal.valueOf(value);
     }
 
-    private static List<String> toChannelStrings(List<AlertChannel> channels) {
+    private static List<String> toCreateChannelStrings(List<AlertCreateRequest.ChannelsEnum> channels) {
         if (channels == null) {
             return null;
         }
         return channels.stream()
-                .filter(channel -> channel != null && channel.getValue() != null)
-                .map(AlertChannel::getValue)
+                .map(channel -> channel == null ? null : channel.getValue())
+                .toList();
+    }
+
+    private static List<String> toUpdateChannelStrings(List<AlertUpdateRequest.ChannelsEnum> channels) {
+        if (channels == null) {
+            return null;
+        }
+        return channels.stream()
+                .map(channel -> channel == null ? null : channel.getValue())
                 .toList();
     }
 

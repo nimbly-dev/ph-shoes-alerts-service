@@ -1,0 +1,91 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: alerts-web
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:snowflake://${SNOWFLAKE_ACCOUNT}.snowflakecomputing.com/?warehouse=${SNOWFLAKE_WAREHOUSE}&db=${SNOWFLAKE_DATABASE}&schema=${SNOWFLAKE_SCHEMA:PRODUCTION_MARTS}&role=${SNOWFLAKE_ROLE:}&JDBC_QUERY_RESULT_FORMAT=JSON}
+    username: ${SNOWFLAKE_USER:${SPRING_DATASOURCE_USERNAME}}
+    password: ${SNOWFLAKE_PWD:${SPRING_DATASOURCE_PASSWORD}}
+    driver-class-name: net.snowflake.client.jdbc.SnowflakeDriver
+    hikari:
+      data-source-properties:
+        ENABLE_ARROW_RESULTSET: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+
+logging:
+  level:
+    root: INFO
+
+cors:
+  allowed-origins:
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
+    - "https://www.phshoesproject.com"
+    - "https://phshoesproject.com"
+  allowed-methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+  allowed-headers: ["*"]
+  exposed-headers: []
+  allow-credentials: true
+  max-age: 3600
+
+phshoes:
+  dynamo:
+    migrations:
+      enabled: true
+  security:
+    email:
+      hmac-pepper-b64: ${HMAC_PEPPER_B64}
+      aes-key-b64: ${AES_KEY_B64}
+      legacy-peppers-b64: ${HMAC_LEGACY_PEPPERS_B64}
+    jwt:
+      enabled: true
+      issuer: ph-shoes
+      secret: ${JWT_SECRET}
+      access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:1800}
+  suppression:
+    table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
+  status:
+    enabled: true
+    path: /system/status
+    service-id: alerts-web
+    display-name: Alerts
+    environment: ${SERVICE_ENVIRONMENT:${APP_ENV:local}}
+    version: ${APP_VERSION:${PROJECT_VERSION:0.0.1-SNAPSHOT}}
+    openapi:
+      enabled: true
+      group-name: service-status
+      paths-to-match:
+        - /system/status
+      remove-security: true
+  api:
+    rate-limit:
+      enabled: ${API_RATE_LIMIT_ENABLED:false}
+      default-window: ${API_RATE_LIMIT_DEFAULT_WINDOW:10m}
+      global:
+        enabled: ${API_RATE_LIMIT_GLOBAL_ENABLED:${API_RATE_LIMIT_ENABLED:false}}
+        limit: ${API_RATE_LIMIT_GLOBAL_LIMIT:10000}
+      per-ip:
+        enabled: ${API_RATE_LIMIT_PER_IP_ENABLED:${API_RATE_LIMIT_ENABLED:false}}
+        limit: ${API_RATE_LIMIT_PER_IP_LIMIT:150}
+      per-user:
+        enabled: ${API_RATE_LIMIT_PER_USER_ENABLED:${API_RATE_LIMIT_ENABLED:false}}
+        limit: ${API_RATE_LIMIT_PER_USER_LIMIT:150}
+
+aws:
+  region: ${AWS_REGION:ap-southeast-1}
+  endpoint: ${AWS_ENDPOINT:http://localhost:4566}
+
+schema:
+  migrations:
+    enabled: ${SCHEMA_MIGRATIONS_ENABLED:true}
+    bootstrapIfMissing: ${SCHEMA_MIGRATIONS_BOOTSTRAP_IF_MISSING:true}
+    initial: ${SCHEMA_MIGRATIONS_INITIAL:0.0.0}
+    serviceName: ${SCHEMA_MIGRATIONS_SERVICE_NAME:alerts_service}

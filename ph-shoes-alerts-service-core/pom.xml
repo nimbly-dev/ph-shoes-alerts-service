@@ -14,7 +14,7 @@
 
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
-        <openapi.srcDir>${project.basedir}/docs/openapi</openapi.srcDir>
+        <openapi.srcDir>${project.parent.basedir}/docs/openapi</openapi.srcDir>
         <openapi.root>openapi.yaml</openapi.root>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -87,6 +87,16 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -135,6 +145,7 @@
                             <generateModelTests>false</generateModelTests>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateAliasAsModel>true</generateAliasAsModel>
                             <apiPackage>com.nimbly.phshoesbackend.alerts.api</apiPackage>
                             <modelPackage>com.nimbly.phshoesbackend.alerts.core.model.dto</modelPackage>
                             <configOptions>
@@ -143,6 +154,7 @@
                                 <useTags>true</useTags>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useBeanValidation>true</useBeanValidation>
+                                <useEnumAsRef>true</useEnumAsRef>
                                 <useAbstractClassForAllOf>false</useAbstractClassForAllOf>
                             </configOptions>
                             <typeMappings>

@@ -5,9 +5,41 @@ info:
 servers:
   - url: /api/v1
 
+tags:
+  - name: Alerts
+    description: Alerts CRUD endpoints for authenticated users.
+  - name: AlertsScheduler
+    description: Internal endpoints to observe/trigger the alerts scheduler.
 paths:
+  /alerts-scheduler/run:
+    get:
+      tags: [AlertsScheduler]
+      summary: Run alerts scheduler for a given date
+      description: Optional email limits execution to the account owner for dry/test runs.
+      operationId: runAlertsScheduler
+      security: []
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scheduler run summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsSchedulerRunResponse'
   /alerts:
     post:
+      tags: [Alerts]
       summary: Create an alert for the authenticated user
       operationId: createAlert
       security:
@@ -17,15 +49,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertCreateRequest'
+              $ref: '#/components/schemas/AlertCreateRequest'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+                $ref: '#/components/schemas/AlertResponse'
     get:
+      tags: [Alerts]
       summary: List alerts for the authenticated user
       operationId: listAlerts
       security:
@@ -38,10 +71,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+                  $ref: '#/components/schemas/AlertResponse'
 
   /alerts/{productId}:
     get:
+      tags: [Alerts]
       summary: Get an alert by productId for the authenticated user
       operationId: getAlert
       security:
@@ -57,10 +91,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+                $ref: '#/components/schemas/AlertResponse'
         '404':
           description: Not Found
     put:
+      tags: [Alerts]
       summary: Update an alert (criteria or reset status)
       operationId: updateAlert
       security:
@@ -75,17 +110,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertUpdateRequest'
+              $ref: '#/components/schemas/AlertUpdateRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+                $ref: '#/components/schemas/AlertResponse'
         '404':
           description: Not Found
     delete:
+      tags: [Alerts]
       summary: Delete an alert
       operationId: deleteAlert
       security:
@@ -100,6 +136,19 @@ paths:
           description: Deleted
 
 components:
+  schemas:
+    AlertCreateRequest:
+      $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertCreateRequest'
+    AlertUpdateRequest:
+      $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertUpdateRequest'
+    AlertResponse:
+      $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertResponse'
+    AlertStatus:
+      $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertStatus'
+    AlertChannel:
+      $ref: 'components/schemas/Alert.yaml#/components/schemas/AlertChannel'
+    AlertsSchedulerRunResponse:
+      $ref: 'components/schemas/AlertsSchedulerRun.yaml#/components/schemas/AlertsSchedulerRunResponse'
   securitySchemes:
     bearerAuth:
       type: http

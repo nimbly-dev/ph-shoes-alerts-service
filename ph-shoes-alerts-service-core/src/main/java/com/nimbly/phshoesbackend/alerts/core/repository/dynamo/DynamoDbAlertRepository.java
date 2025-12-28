@@ -96,7 +96,7 @@ public class DynamoDbAlertRepository implements AlertRepository {
     }
 
     @Override
-    public List<Alert> findActiveByProduct(String productId, int limit) {
+    public List<Alert> findActiveByProduct(String productId) {
         var out = new ArrayList<Alert>();
         var filter = Expression.builder()
                 .expression("#s = :active")
@@ -108,7 +108,6 @@ public class DynamoDbAlertRepository implements AlertRepository {
         var req = QueryEnhancedRequest.builder()
                 .queryConditional(QueryConditional.keyEqualTo(Key.builder().partitionValue(productId).build()))
                 .filterExpression(filter)
-                .limit(limit > 0 ? limit : 1000)
                 .build();
 
         var results = table().query(req);
@@ -116,9 +115,6 @@ public class DynamoDbAlertRepository implements AlertRepository {
         for (var page : results) {
             for (Alert a : page.items()) {
                 out.add(a);
-                if (limit > 0 && out.size() >= limit) {
-                    return out;
-                }
             }
         }
         return out;

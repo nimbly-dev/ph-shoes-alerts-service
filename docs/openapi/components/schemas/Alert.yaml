@@ -8,6 +8,7 @@ components:
     AlertChannel:
       type: string
       enum: [APP_WIDGET, EMAIL]
+      x-java-class: com.nimbly.phshoesbackend.alerts.core.model.AlertChannel
 
     AlertCreateRequest:
       type: object
