@@ -1,9 +1,11 @@
 package com.nimbly.phshoesbackend.alerts.core.model;
 
-import com.nimbly.phshoesbackend.alerts.core.model.EmailDeliveryReport;
+
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class MutableSchedulerRunSummary {
     private final LocalDate date;
     private final int scrapedCount;
@@ -34,38 +36,6 @@ public class MutableSchedulerRunSummary {
     public SchedulerRunSummary asImmutable() {
         return new SchedulerRunSummary(date, scrapedCount, dedupedCount,
                 alertsChecked, triggered, emailsSent, suppressed, errors);
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public int getScrapedCount() {
-        return scrapedCount;
-    }
-
-    public int getDedupedCount() {
-        return dedupedCount;
-    }
-
-    public int getAlertsChecked() {
-        return alertsChecked;
-    }
-
-    public int getTriggered() {
-        return triggered;
-    }
-
-    public int getEmailsSent() {
-        return emailsSent;
-    }
-
-    public int getSuppressed() {
-        return suppressed;
-    }
-
-    public int getErrors() {
-        return errors;
     }
 
 }
