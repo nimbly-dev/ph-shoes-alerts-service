@@ -30,7 +30,7 @@ COPY ph-shoes-alerts-service-core ./ph-shoes-alerts-service-core
 COPY ph-shoes-alerts-service-web ./ph-shoes-alerts-service-web
 COPY ph-shoes-alerts-service-scheduler-web ./ph-shoes-alerts-service-scheduler-web
 COPY docs ./docs
-RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ${SERVICE_MODULE} -am -P${MAVEN_ACTIVE_PROFILES} -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn -s ${MAVEN_SETTINGS_PATH} -q -pl ${SERVICE_MODULE} -am -P${MAVEN_ACTIVE_PROFILES} package
 RUN rm -f ${MAVEN_SETTINGS_PATH}
 
 ## ---------- Runtime stage ----------
