@@ -8,15 +8,12 @@ import com.nimbly.phshoesbackend.alerts.core.service.AlertService;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertCreateRequest;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertResponse;
 import com.nimbly.phshoesbackend.alerts.core.model.dto.AlertUpdateRequest;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 

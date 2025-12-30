@@ -13,6 +13,7 @@ import com.nimbly.phshoesbackend.alerts.core.model.TriggeredEmailItem;
 import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -242,5 +243,139 @@ class AlertsSchedulerServiceImplTest {
         assertEquals(0, summary.getSuppressed());
         assertEquals(0, summary.getErrors());
         verify(alertDigestService, never()).sendDigests(anyMap());
+    }
+
+    @Test
+    void run_whenTestEmailConfigured_filtersAlertsByResolvedUser() {
+        // Arrange
+        LocalDate date = LocalDate.of(2025, 9, 1);
+        ScrapedProduct scrapedProduct = ScrapedProduct.builder()
+                .productId("product-7")
+                .dwid("dwid-7")
+                .priceSale(BigDecimal.valueOf(80))
+                .priceOriginal(BigDecimal.valueOf(120))
+                .build();
+        Alert matchingAlert = new Alert();
+        matchingAlert.setProductId("product-7");
+        matchingAlert.setUserId("user-7");
+        matchingAlert.setChannels(List.of("EMAIL"));
+        matchingAlert.setDesiredPrice(BigDecimal.valueOf(90));
+        Alert otherAlert = new Alert();
+        otherAlert.setProductId("product-7");
+        otherAlert.setUserId("user-8");
+        otherAlert.setChannels(List.of("EMAIL"));
+        otherAlert.setDesiredPrice(BigDecimal.valueOf(90));
+
+        when(schedulerProperties.getTestEmail()).thenReturn("test@example.com");
+        when(emailCrypto.normalize("test@example.com")).thenReturn("normalized@example.com");
+        when(warehouseRepo.findByDate(date)).thenReturn(List.of(scrapedProduct));
+        when(alertDigestService.resolveUserIdByNormalizedEmail("normalized@example.com"))
+                .thenReturn(Optional.of("user-7"));
+        when(schedulerProperties.isDryRun()).thenReturn(false);
+        when(alertRepository.findActiveByProduct("product-7")).thenReturn(List.of(matchingAlert, otherAlert));
+        when(alertDigestService.prepareEmailItem(eq(matchingAlert), any(AlertProductSnapshot.class), eq("price<=desired")))
+                .thenReturn(Optional.empty());
+
+        // Act
+        SchedulerRunSummary summary = schedulerService.run(date);
+
+        // Assert
+        assertEquals(1, summary.getAlertsChecked());
+        assertEquals(1, summary.getTriggered());
+        verify(alertDigestService).resolveUserIdByNormalizedEmail("normalized@example.com");
+        verify(alertRepository).save(eq(matchingAlert));
+        verify(alertRepository, never()).save(eq(otherAlert));
+        verify(alertDigestService, never()).sendDigests(anyMap());
+    }
+
+    @Test
+    void run_whenTestEmailNormalizationFails_usesNullEmail() {
+        // Arrange
+        LocalDate date = LocalDate.of(2025, 10, 1);
+        when(schedulerProperties.getTestEmail()).thenReturn("bad@example.com");
+        when(emailCrypto.normalize("bad@example.com"))
+                .thenThrow(new IllegalArgumentException("bad-email"));
+        when(warehouseRepo.findByDate(date)).thenReturn(List.of());
+        when(alertDigestService.resolveUserIdByNormalizedEmail(ArgumentMatchers.isNull()))
+                .thenReturn(Optional.empty());
+
+        // Act
+        SchedulerRunSummary summary = schedulerService.run(date);
+
+        // Assert
+        assertEquals(0, summary.getScrapedCount());
+        assertEquals(0, summary.getDedupedCount());
+        verify(emailCrypto).normalize("bad@example.com");
+        verify(alertDigestService).resolveUserIdByNormalizedEmail(ArgumentMatchers.isNull());
+    }
+
+    @Test
+    void run_whenDuplicateProductsPreferLowerPrice_triggersAlert() {
+        // Arrange
+        LocalDate date = LocalDate.of(2025, 11, 5);
+        ScrapedProduct expensiveProduct = ScrapedProduct.builder()
+                .productId("product-8")
+                .dwid("dwid-8a")
+                .priceSale(BigDecimal.valueOf(150))
+                .priceOriginal(BigDecimal.valueOf(160))
+                .build();
+        ScrapedProduct cheaperProduct = ScrapedProduct.builder()
+                .productId("product-8")
+                .dwid("dwid-8b")
+                .priceSale(BigDecimal.valueOf(80))
+                .priceOriginal(BigDecimal.valueOf(160))
+                .build();
+        Alert alert = new Alert();
+        alert.setProductId("product-8");
+        alert.setUserId("user-8");
+        alert.setChannels(List.of("EMAIL"));
+        alert.setDesiredPrice(BigDecimal.valueOf(100));
+
+        when(warehouseRepo.findByDate(date)).thenReturn(List.of(expensiveProduct, cheaperProduct));
+        when(schedulerProperties.isDryRun()).thenReturn(false);
+        when(alertRepository.findActiveByProduct("product-8")).thenReturn(List.of(alert));
+        when(alertDigestService.prepareEmailItem(eq(alert), any(AlertProductSnapshot.class), eq("price<=desired")))
+                .thenReturn(Optional.empty());
+
+        // Act
+        SchedulerRunSummary summary = schedulerService.run(date, null);
+
+        // Assert
+        assertEquals(2, summary.getScrapedCount());
+        assertEquals(1, summary.getDedupedCount());
+        assertEquals(1, summary.getTriggered());
+        verify(alertRepository).save(eq(alert));
+        verify(alertDigestService, never()).sendDigests(anyMap());
+    }
+
+    @Test
+    void run_whenProductTitleBlank_usesProductIdForSnapshotName() {
+        // Arrange
+        LocalDate date = LocalDate.of(2025, 12, 12);
+        ScrapedProduct scrapedProduct = ScrapedProduct.builder()
+                .productId("product-9")
+                .dwid("dwid-9")
+                .title(" ")
+                .priceSale(BigDecimal.valueOf(85))
+                .priceOriginal(BigDecimal.valueOf(100))
+                .build();
+        Alert alert = new Alert();
+        alert.setProductId("product-9");
+        alert.setUserId("user-9");
+        alert.setChannels(List.of("EMAIL"));
+        alert.setDesiredPrice(BigDecimal.valueOf(90));
+        ArgumentCaptor<AlertProductSnapshot> snapshotCaptor = ArgumentCaptor.forClass(AlertProductSnapshot.class);
+
+        when(warehouseRepo.findByDate(date)).thenReturn(List.of(scrapedProduct));
+        when(schedulerProperties.isDryRun()).thenReturn(false);
+        when(alertRepository.findActiveByProduct("product-9")).thenReturn(List.of(alert));
+        when(alertDigestService.prepareEmailItem(eq(alert), snapshotCaptor.capture(), eq("price<=desired")))
+                .thenReturn(Optional.empty());
+
+        // Act
+        schedulerService.run(date, null);
+
+        // Assert
+        assertEquals("product-9", snapshotCaptor.getValue().getProductName());
     }
 }

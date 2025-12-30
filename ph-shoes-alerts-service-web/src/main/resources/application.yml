@@ -51,14 +51,14 @@ phshoes:
       secret: ${JWT_SECRET}
       access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:1800}
   suppression:
-    table-name: ${SUPPRESSIONS_TABLE:email_suppressions}
+    table-name: email_suppressions
   status:
     enabled: true
     path: /system/status
     service-id: alerts-web
     display-name: Alerts
     environment: ${SERVICE_ENVIRONMENT:${APP_ENV:local}}
-    version: ${APP_VERSION:${PROJECT_VERSION:0.0.1-SNAPSHOT}}
+    version: ${APP_VERSION:${PROJECT_VERSION}}
     openapi:
       enabled: true
       group-name: service-status

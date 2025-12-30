@@ -3,7 +3,6 @@ package com.nimbly.phshoesbackend.alerts.web;
 import com.nimbly.phshoesbackend.alerts.core.exception.AlertNotFoundException;
 import com.nimbly.phshoesbackend.alerts.core.exception.DuplicateAlertException;
 import com.nimbly.phshoesbackend.alerts.core.exception.InvalidAlertException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest req) {
+    public Map<String, Object> handleConstraintViolation(ConstraintViolationException ex) {
         return Map.of(
                 "code", "VALIDATION_ERROR",
                 "details", ex.getMessage()
