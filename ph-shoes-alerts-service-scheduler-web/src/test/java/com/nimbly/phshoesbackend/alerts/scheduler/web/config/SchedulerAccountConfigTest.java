@@ -2,7 +2,6 @@ package com.nimbly.phshoesbackend.alerts.scheduler.web.config;
 
 import com.nimbly.phshoesbackend.commons.core.repository.SuppressionRepository;
 import com.nimbly.phshoesbackend.commons.core.security.EmailCrypto;
-import com.nimbly.phshoesbackend.commons.core.security.jwt.JwtSecurityProperties;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmailProps;
 import com.nimbly.phshoesbackend.useraccount.core.config.props.AppVerificationProps;
 import com.nimbly.phshoesbackend.useraccount.core.repository.AccountRepository;
@@ -58,15 +57,9 @@ class SchedulerAccountConfigTest {
     void unsubscribeTokenCodec_returnsHmacCodec() {
         // Arrange
         AppVerificationProps verificationProps = mock(AppVerificationProps.class);
-        JwtSecurityProperties jwtSecurityProperties = mock(JwtSecurityProperties.class);
-        EmailCrypto emailCrypto = mock(EmailCrypto.class);
 
         // Act
-        UnsubscribeTokenCodec codec = config.unsubscribeTokenCodec(
-                verificationProps,
-                jwtSecurityProperties,
-                emailCrypto
-        );
+        UnsubscribeTokenCodec codec = config.unsubscribeTokenCodec(verificationProps);
 
         // Assert
         assertNotNull(codec);
@@ -105,6 +98,5 @@ class SchedulerAccountConfigTest {
 
         // Assert
         assertTrue(configured.contains(AppVerificationProps.class));
-        assertTrue(configured.contains(JwtSecurityProperties.class));
     }
 }

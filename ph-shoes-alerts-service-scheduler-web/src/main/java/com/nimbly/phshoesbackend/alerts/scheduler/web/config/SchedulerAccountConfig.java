@@ -12,14 +12,13 @@ import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.UnsubscribeTokenCo
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.HmacUnsubscribeTokenCodec;
 import com.nimbly.phshoesbackend.useraccount.core.unsubscribe.impl.UnsubscribeServiceImpl;
 import com.nimbly.phshoesbackend.notification.core.model.props.NotificationEmailProps;
-import com.nimbly.phshoesbackend.commons.core.security.jwt.JwtSecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 @Configuration
-@EnableConfigurationProperties({AppVerificationProps.class, JwtSecurityProperties.class})
+@EnableConfigurationProperties({AppVerificationProps.class})
 public class SchedulerAccountConfig {
 
     @Bean
@@ -34,10 +33,8 @@ public class SchedulerAccountConfig {
     }
 
     @Bean
-    public UnsubscribeTokenCodec unsubscribeTokenCodec(AppVerificationProps verificationProps,
-                                                       JwtSecurityProperties jwtSecurityProperties,
-                                                       EmailCrypto emailCrypto) {
-        return new HmacUnsubscribeTokenCodec(verificationProps, jwtSecurityProperties, emailCrypto);
+    public UnsubscribeTokenCodec unsubscribeTokenCodec(AppVerificationProps verificationProps) {
+        return new HmacUnsubscribeTokenCodec(verificationProps);
     }
 
     @Bean
