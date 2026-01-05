@@ -19,9 +19,11 @@ spring:
 
 springdoc:
   swagger-ui:
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:false}
     path: /api/v1/swagger-ui.html
   api-docs:
     path: /api/v1/api-docs
+    enabled: ${SPRINGDOC_APIDOCS_ENABLED:false}
 
 logging:
   level:
