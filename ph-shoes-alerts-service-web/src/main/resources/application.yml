@@ -90,7 +90,7 @@ phshoes:
 
 aws:
   region: ${AWS_REGION:ap-southeast-1}
-  endpoint: ${AWS_ENDPOINT:http://localhost:4566}
+  endpoint: ${AWS_ENDPOINT:}
 
 schema:
   migrations:
