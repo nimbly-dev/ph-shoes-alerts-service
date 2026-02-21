@@ -108,6 +108,33 @@ jobs:
             -e NOTIFICATION_PROVIDER \
             -e NOTIFICATION_TRANSPORT \
             "$SCHEDULER_IMAGE_URI"
+      - name: Validate crypto secrets in container (safe)
+        run: |
+          docker exec alerts-scheduler python - <<'PY'
+          import os, re, base64, sys
+          def check(name):
+              v = os.getenv(name, "")
+              if not v:
+                  print(f"{name}: MISSING")
+                  return False
+              bad = re.sub(r"[A-Za-z0-9+/=]", "", v)
+              if bad:
+                  uniq = "".join(sorted(set(bad)))
+                  print(f"{name}: INVALID_CHARS={uniq!r}")
+                  return False
+              try:
+                  raw = base64.b64decode(v, validate=True)
+              except Exception as e:
+                  print(f"{name}: DECODE_FAIL {e}")
+                  return False
+              print(f"{name}: OK len={len(raw)}")
+              return True
+          ok = True
+          ok = check("AES_KEY_B64") and ok
+          ok = check("HMAC_PEPPER_B64") and ok
+          if not ok:
+              sys.exit(1)
+          PY
 
       - name: Wait for scheduler to start
         run: |
