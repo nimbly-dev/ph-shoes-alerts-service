@@ -166,7 +166,7 @@ jobs:
             ENCODED=$(python -c "import urllib.parse, os;print(urllib.parse.quote(os.environ.get('INPUT_EMAIL','')))") || exit 1
             QUERY="${QUERY}&email=${ENCODED}"
           fi
-          URL="http://localhost:8085/api/v1/alerts-scheduler/run?${QUERY}"
+          URL="http://localhost:8085/alerts-scheduler/run?${QUERY}"
           echo "Calling: $URL"
           curl -fsS "$URL" -H "accept: */*"
 
